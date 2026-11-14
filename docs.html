@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docs · SealBox</title>
+  <meta name="description" content="SealBox command reference: init, status, seal, exec, vault, team, recovery; configuration, security model and the VS Code extension.">
+  <meta name="theme-color" content="#0a0c0b">
+  <link rel="alternate" hreflang="en" href="docs.html">
+  <link rel="alternate" hreflang="tr" href="tr/docs.html">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235cc07a'/%3E%3Crect x='8' y='14' width='16' height='12' rx='2' fill='%2306110a'/%3E%3Cpath d='M11 14v-3a5 5 0 0 1 10 0v3' stroke='%2306110a' stroke-width='2.6' fill='none'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav always-solid" aria-label="Main menu">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06110a" stroke-width="2.6" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2" fill="#06110a"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      SealBox
+    </a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+    <div class="nav-links">
+      <a href="index.html#nasil">How it works</a>
+      <a href="learn.html">Learn</a>
+      <a href="docs.html" class="active">Docs</a>
+      <a href="index.html#vscode">VS Code</a>
+      <a href="https://github.com/gokhanozdemir-git/SealBox" target="_blank" rel="noopener">GitHub</a>
+      <span class="lang-switch" aria-label="Language"><a class="on" aria-current="true">EN</a><a class="lang" href="tr/docs.html" hreflang="tr" lang="tr">TR</a></span>
+      <a class="btn-sm" href="learn.html#baslangic">Get started</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">Docs · v0.3.0</p>
+    <h1>SealBox reference</h1>
+    <p>Every command, every option and every setting. If you're just starting, read <a href="learn.html">Learn</a> first.</p>
+    <button class="btn side-toggle" type="button">Contents ☰</button>
+  </div>
+</header>
+
+<div class="docs two">
+  <aside class="sidebar" aria-label="Contents">
+    <h5>Getting started</h5>
+    <a href="#kurulum">Installation</a>
+    <a href="#genel">General usage</a>
+    <h5>Commands</h5>
+    <a href="#init"><code>init</code></a>
+    <a href="#status"><code>status</code></a>
+    <a href="#seal"><code>seal</code></a>
+    <a href="#exec"><code>exec</code></a>
+    <a href="#vault"><code>vault</code></a>
+    <a href="#team"><code>team</code></a>
+    <a href="#recovery"><code>recovery</code></a>
+    <a href="#history"><code>history</code></a>
+    <a href="#hook"><code>hook</code></a>
+    <h5>Concepts</h5>
+    <a href="#donusum">What's found, what's done</a>
+    <a href="#anahtar">Key hierarchy</a>
+    <a href="#repo">What goes in the repo</a>
+    <h5>Settings</h5>
+    <a href="#yapilandirma">sealbox.toml</a>
+    <a href="#eklenti">VS Code extension</a>
+    <h5>Security</h5>
+    <a href="#gosterim">What it shows and never shows</a>
+    <a href="#sinirlar">Known limitations</a>
+    <h5>Project</h5>
+    <a href="#mimari">Architecture</a>
+    <a href="#gecis">Migrating from the old name</a>
+    <a href="#gelistirme">Development</a>
+  </aside>
+
+  <main class="prose">
+
+    <section id="kurulum">
+      <h2>Installation</h2>
+      <p>Requires Python 3.12 or newer. Runs on Windows, macOS and Linux.</p>
+      <div class="codeblock">
+<pre><span class="p">$ </span>pip install sealbox            <span class="c"># or</span>
+<span class="p">$ </span>pipx install sealbox           <span class="c"># isolated environment, available everywhere</span>
+<span class="p">$ </span>pip install -e .               <span class="c"># from source (at the repo root)</span></pre>
+      </div>
+      <p>Dependencies: <code>cryptography</code>, <code>pydantic</code>, <code>shamir-mnemonic</code>, <code>keyring</code>, <code>bcrypt</code>.</p>
+    </section>
+
+    <section id="genel">
+      <h2>General usage</h2>
+      <div class="usage">sealbox [--lang tr|en] &lt;command&gt; [options]</div>
+      <dl class="opts">
+        <dt>-h, --help</dt><dd>Show help. <code>sealbox</code> with no command shows the grouped list.</dd>
+        <dt>-V, --version</dt><dd>Show the version.</dd>
+        <dt>--lang {tr,en}</dt><dd>Message language. Can also be set with the <code>SEALBOX_LANG</code> environment variable. Default: your computer's language.</dd>
+        <dt>help &lt;command&gt;</dt><dd>Details and examples for a command (same as <code>sealbox &lt;command&gt; --help</code>).</dd>
+      </dl>
+      <p>Commands come in five groups:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Group</th><th>Commands</th></tr></thead>
+          <tbody>
+            <tr><td>Getting started</td><td><a href="#init"><code>init</code></a>, <a href="#status"><code>status</code></a></td></tr>
+            <tr><td>Everyday use</td><td><a href="#seal"><code>seal</code></a>, <a href="#exec"><code>exec</code></a>, <a href="#vault"><code>vault</code></a></td></tr>
+            <tr><td>Team</td><td><a href="#team"><code>team</code></a></td></tr>
+            <tr><td>Recovery</td><td><a href="#recovery"><code>recovery</code></a></td></tr>
+            <tr><td>Git</td><td><a href="#history"><code>history</code></a>, <a href="#hook"><code>hook</code></a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Mistyped commands get a suggestion: <code>sealbox sael</code> → "Did you mean: seal?". The commands are the same in any IDE's terminal (VS Code, PyCharm, Eclipse…).</p>
+    </section>
+
+    <section id="init">
+      <div class="cmd-head"><h2><code>sealbox init</code></h2><span class="badge safe">changes no files</span></div>
+      <p>Checks the project and lists the next steps in order. It's the first command to run in a new project.</p>
+      <div class="usage">sealbox init [-w FOLDER] [-c FILE]</div>
+      <dl class="opts">
+        <dt>-w, --workspace FOLDER</dt><dd>Project root (default: the current folder).</dd>
+        <dt>-c, --config FILE</dt><dd>Path to <code>sealbox.toml</code>.</dd>
+      </dl>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox init                     <span class="c"># check the project in the current folder</span>
+<span class="p">$ </span>sealbox init -w C:\my-project    <span class="c"># another folder</span></pre>
+      </div>
+    </section>
+
+    <section id="status">
+      <div class="cmd-head"><h2><code>sealbox status</code></h2><span class="badge safe">changes no files</span></div>
+      <p>Shows the state of the vault, the key, the recovery code and the team. Every problem line tells you what to do next. Exits with code 1 if something can't be opened.</p>
+      <div class="usage">sealbox status [-w FOLDER] [-c FILE] [--json]</div>
+      <dl class="opts">
+        <dt>--json</dt><dd>Machine-readable output for scripts and CI.</dd>
+      </dl>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox status
+  <span style="color:var(--green)">✓</span> Vault: 4 variables, 2 redacted values
+  <span style="color:var(--red)">✗</span> The vault key is not on this computer  <span class="c">→ sealbox recovery restore</span>
+  <span class="c">·</span> No team (single user)                    <span class="c">→ sealbox team init --github &lt;name&gt;</span>
+  <span style="color:var(--yellow)">⚠</span> Exposed secrets in 2 file(s)             <span class="c">→ sealbox seal</span></pre>
+      </div>
+    </section>
+
+    <section id="seal">
+      <div class="cmd-head"><h2><code>sealbox seal</code></h2><span class="badge">rewrites files</span></div>
+      <p>Finds passwords, tokens, API keys and personal data in your files:</p>
+      <ul>
+        <li>Moves secrets in code into the vault and writes an environment-variable lookup in their place (Python <code>os.environ</code>, JS/TS <code>process.env</code>, Java <code>System.getenv</code>).</li>
+        <li>Redacts data such as emails and national IDs with a <code>__SECURE_..__</code> placeholder.</li>
+        <li>Takes <code>.env</code> into the vault and leaves <code>.env.sealed</code> in its place.</li>
+      </ul>
+      <div class="usage">sealbox seal [-w FOLDER] [-c FILE] [--check] [--json] [paths ...]</div>
+      <dl class="opts">
+        <dt>paths</dt><dd>Files or folders (default: the whole project).</dd>
+        <dt>--check</dt><dd>Don't write, only look. Exit code 1 if secrets are found.</dd>
+        <dt>--json</dt><dd>Print the report as JSON: lines, columns and categories, <b>never values</b>. The editor extension uses this.</dd>
+        <dt>-w, --workspace</dt><dd>Project root.</dd>
+        <dt>-c, --config</dt><dd>Path to <code>sealbox.toml</code>.</dd>
+      </dl>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox seal --check        <span class="c"># only look: any exposed secrets on disk?</span>
+<span class="p">$ </span>sealbox seal                <span class="c"># move every secret in the project into the vault</span>
+<span class="p">$ </span>sealbox seal src/config.py  <span class="c"># a single file</span></pre>
+      </div>
+      <div class="callout warn"><p><b>Run it from the project root.</b> When run from a subfolder, it stops if there's a <code>.env</code>, <code>.git</code> or vault above, because that <code>.env</code> would be left exposed. If you chose that folder on purpose, pass <code>-w .</code>.</p></div>
+      <p>A file whose redaction can't be verified is <b>left alone</b> with a <code>[!]</code> warning, and the rest of the scan carries on. Redaction backups are encrypted with the vault key too.</p>
+    </section>
+
+    <section id="exec">
+      <div class="cmd-head"><h2><code>sealbox exec</code></h2><span class="badge asks">asks for approval</span></div>
+      <p>Runs your program with the secrets from the vault. An approval window first shows which values will be handed over. They're given only to this run, as environment variables. Secrets in the program's output are printed as <code>[REDACTED:..]</code>.</p>
+      <div class="usage">sealbox exec [-w FOLDER] -- &lt;command&gt; [arguments...]</div>
+      <dl class="opts">
+        <dt>-- command</dt><dd>The command to run, after <code>--</code>.</dd>
+        <dt>-w, --workspace</dt><dd>Project root (default: the nearest parent folder with a vault).</dd>
+      </dl>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox exec -- python app.py        <span class="c"># Python</span>
+<span class="p">$ </span>sealbox exec -- npm start            <span class="c"># Node.js</span>
+<span class="p">$ </span>sealbox exec -- java Main.java       <span class="c"># Java</span>
+<span class="p">$ </span>sealbox exec -- mvn spring-boot:run  <span class="c"># Maven / Gradle</span></pre>
+      </div>
+      <div class="callout"><p><b>By design:</b> there's deliberately no flag or environment variable that skips approval. The child process's output goes through a pipe, so interactive or colourful terminal programs may behave differently.</p></div>
+    </section>
+
+    <section id="vault">
+      <div class="cmd-head"><h2><code>sealbox vault</code></h2></div>
+      <p>Manages the entries in the vault. Values are never printed to the terminal on their own. Showing and changing them asks for approval. Every subcommand accepts <code>-w, --workspace</code>.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Subcommand</th><th>Usage</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr id="vault-list"><td><code>list</code></td><td><code>vault list</code></td><td>Variable names and redaction placeholders. Shows no values.</td></tr>
+            <tr><td><code>reveal</code></td><td><code>vault reveal NAME</code></td><td>Shows the value in the approval window. NAME can be a variable or a <code>__SECURE_..__</code> placeholder.</td></tr>
+            <tr><td><code>set</code></td><td><code>vault set NAME</code></td><td>Changes or adds a value (asked for in a window).</td></tr>
+            <tr><td><code>expose</code></td><td><code>vault expose PLACEHOLDER [--as NAME]</code></td><td>Hands redacted data to the program at runtime. The placeholder becomes <code>os.environ[...]</code> in the code. <code>--as</code> sets the variable name (default: taken from the assignment).</td></tr>
+            <tr><td><code>remove</code></td><td><code>vault remove [NAME...] [--unused] [--force]</code></td><td>Deletes entries (asks for approval). <code>--unused</code>: entries no file uses. <code>--force</code>: delete even if a file still uses it.</td></tr>
+            <tr><td><code>reset</code></td><td><code>vault reset</code></td><td>If the key is lost and there's no recovery, creates a new empty vault. The old one is set aside.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox vault list
+<span class="p">$ </span>sealbox vault reveal DB_PASSWORD
+<span class="p">$ </span>sealbox vault reveal __SECURE_TCKN_103d…__
+<span class="p">$ </span>sealbox vault set DB_PASSWORD
+<span class="p">$ </span>sealbox vault expose __SECURE_EMAIL_8f2c…__ --as ADMIN_EMAIL
+<span class="p">$ </span>sealbox vault remove --unused</pre>
+      </div>
+      <p>The same value always maps to the same entry, so sealing again creates no duplicates. An entry whose placeholder or variable name still appears in a file isn't deleted without <code>--force</code>.</p>
+    </section>
+
+    <section id="team">
+      <div class="cmd-head"><h2><code>sealbox team</code></h2></div>
+      <p>Shares the vault with your teammates. The vault goes into the repo, and only the SSH keys of the GitHub accounts on the team can open the values. <code>commit</code> + <code>push</code> after every change.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Subcommand</th><th>Usage</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>init</code></td><td><code>team init --github NAME</code></td><td>Creates the team with you as owner. This computer's SSH key must be on that GitHub account.</td></tr>
+            <tr><td><code>add</code></td><td><code>team add USER [--owner]</code></td><td>Fetches public keys from <code>github.com/USER.keys</code> and grants access. <code>--owner</code>: add as owner.</td></tr>
+            <tr><td><code>remove</code></td><td><code>team remove USER</code></td><td>Removes them from the team. The vault key (DEK) is rotated and the values they may have seen are listed.</td></tr>
+            <tr><td><code>promote</code></td><td><code>team promote USER</code></td><td>Makes a member an owner.</td></tr>
+            <tr><td><code>list</code></td><td><code>team list</code></td><td>Members, roles and SSH fingerprints.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox team init --github my-name
+<span class="p">$ </span>sealbox team add teammate
+<span class="p">$ </span>sealbox team add teammate --owner
+<span class="p">$ </span>sealbox team remove teammate
+<span class="p">$ </span>sealbox team list</pre>
+      </div>
+      <ul>
+        <li><b>Owner / member:</b> owners can add and remove people. The rule is enforced in software: a member who can open the vault could technically hand a copy to someone else.</li>
+        <li><b>Supported keys:</b> ed25519 (converted to X25519) and RSA (OAEP).</li>
+        <li><b>SSH keys without a passphrase are rejected.</b> To add one: <code>ssh-keygen -p -f ~/.ssh/id_ed25519</code>. The passphrase is asked for in a window, not in the terminal.</li>
+        <li><b>Integrity:</b> every entry in <code>team.json</code> carries a MAC made with a key derived from the DEK. Someone who can write to the repo but doesn't know the DEK can't add a fake member or role.</li>
+      </ul>
+    </section>
+
+    <section id="recovery">
+      <div class="cmd-head"><h2><code>sealbox recovery</code></h2></div>
+      <p>A recovery code that reopens the vault if the vault key is lost (Windows reset, new computer). The code and shares are only shown in a window, never printed to the terminal.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Subcommand</th><th>Usage</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>setup</code></td><td><code>recovery setup [--new]</code></td><td>Creates a recovery code (one per user). <code>--new</code>: replace the existing code with a new one.</td></tr>
+            <tr><td><code>shares</code></td><td><code>recovery shares</code></td><td>Splits the code into 2-of-3 Shamir shares (SLIP-39). Any 2 are enough.</td></tr>
+            <tr><td><code>restore</code></td><td><code>recovery restore [--kit FILE]</code></td><td>Brings the key back with the code or 2 shares. <code>--kit</code>: from a kit, if the vault folder is gone too.</td></tr>
+            <tr><td><code>export</code></td><td><code>recovery export FILE</code></td><td>Writes a recovery kit (locked DEK + encrypted vault). Useless without the code.</td></tr>
+            <tr><td><code>status</code></td><td><code>recovery status [--json]</code></td><td>Is recovery set up?</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox recovery setup
+<span class="p">$ </span>sealbox recovery shares
+<span class="p">$ </span>sealbox recovery export D:\project.sapkit
+<span class="p">$ </span>sealbox recovery restore
+<span class="p">$ </span>sealbox recovery restore --kit D:\project.sapkit</pre>
+      </div>
+      <p>Recovery copies live under <code>~/.sealbox/recovery/</code>, not in the project folder, so they never enter the repo. Because the public half is stored, new projects are locked to recovery without asking for the code.</p>
+    </section>
+
+        <section id="history">
+      <div class="cmd-head"><h2><code>sealbox history</code></h2><span class="badge safe">changes no files</span></div>
+      <p>Searches the whole git history for vault values. A secret committed before it was sealed can still be read in old commits. Values are never printed: only the name, the commit and the file. Exit code 1 if anything is found.</p>
+      <div class="usage">sealbox history [-w FOLDER] [--json]</div>
+      <dl class="opts">
+        <dt>-w, --workspace</dt><dd>Project root.</dd>
+        <dt>--json</dt><dd>Print the report as JSON (used by the editor extension). Contains no values.</dd>
+      </dl>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox history
+<span class="c">Git history:</span>
+<span style="color:var(--yellow)">  ⚠ DB_PASSWORD: exposed in 2 commit(s), pushed to a remote</span>
+<span class="c">      first: 3f9c2e1 2026-10-02, src/config.py</span>
+<span class="c">      → rotate it at the provider, then: sealbox vault set DB_PASSWORD</span></pre>
+      </div>
+      <div class="callout warn"><p><b>Pushed means shared:</b> if a commit is already on a remote branch, the value may be in someone else's hands. Rotate it at the provider; rewriting history alone isn't enough.</p></div>
+    </section>
+
+    <section id="hook">
+      <div class="cmd-head"><h2><code>sealbox hook</code></h2></div>
+      <p>Installs a git pre-commit hook: if a vault value is about to be committed, the commit is stopped with <code>file:line</code>. It's a seat belt against accidents; <code>git commit --no-verify</code> skips it. The hook isn't committed, so each teammate installs it on their own machine.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Subcommand</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>install</code></td><td>Install the pre-commit hook</td></tr>
+            <tr><td><code>uninstall</code></td><td>Remove the SealBox hook</td></tr>
+            <tr><td><code>status [--json]</code></td><td>Is the hook installed?</td></tr>
+            <tr><td><code>run</code></td><td>The check the hook runs (can be run by hand)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox hook install
+<span class="p">$ </span>sealbox hook status</pre>
+      </div>
+    </section>
+
+<section id="donusum">
+      <h2>What's found, what's done</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>What was found</th><th>What's done</th></tr></thead>
+          <tbody>
+            <tr><td>Password / token / API key as a whole string literal (<code>.py</code>, <code>.js</code>, <code>.ts</code>, <code>.java</code>…)</td><td>Moved to the vault. Becomes <code>os.environ["DB_PASSWORD"]</code> / <code>process.env.DB_PASSWORD</code> / <code>System.getenv("DB_PASSWORD")</code></td></tr>
+            <tr><td>The same value repeated in a comment</td><td>Redacted with a placeholder</td></tr>
+            <tr><td>Email, national ID (TCKN), phone, IBAN, name</td><td>Redacted with a placeholder. If the program uses it, <code>vault expose</code> turns it into an environment variable</td></tr>
+            <tr><td><code>.env</code></td><td>Secret lines move to the vault. <code>.env</code> is deleted and a <code>.env.sealed</code> with only placeholders stays</td></tr>
+            <tr><td>JSON / YAML / TOML config file</td><td>Redacted. The report says which environment variable the app should read the value from</td></tr>
+            <tr><td>Part of a larger string (e.g. inside a URL), or an unsupported language</td><td><b>Left alone</b> with a <code>[!]</code> warning. Move it by hand</td></tr>
+            <tr><td>A file whose redaction can't be verified</td><td><b>Left alone</b> with a <code>[!]</code> warning. The rest of the scan carries on</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Validators</h3>
+      <p>Matches are validated to cut false alarms: the Turkish ID number checksum, email, phone, Luhn (cards), IBAN (mod-97) and entropy. Placeholders look like <code>__SECURE_&lt;CATEGORY&gt;_&lt;128 bits&gt;__</code>.</p>
+    </section>
+
+    <section id="anahtar">
+      <h2>Key hierarchy</h2>
+      <p>If the vault key (DEK) lived in a single place, losing that place would lock the vault forever. So the DEK has several locks (envelope encryption):</p>
+      <div class="codeblock">
+<pre>Recovery code (128 bits) ─Argon2id (64 MiB, t=3, p=4)─► Recovery KEK = X25519 ─┐
+GitHub SSH key (ed25519→X25519 or RSA-OAEP) ────────────────────────────────────┼─► DEK ─► vault
+Windows credential store (cache) ───────────────────────────────────────────────┘</pre>
+      </div>
+      <ul>
+        <li><b>Vault encryption:</b> AES-256-GCM, random nonce, replay protection, AAD.</li>
+        <li><b>Where the DEK lives:</b> in the OS credential store (<code>keyring</code>). On Windows in Credential Manager under the name <b>sealbox</b>, on macOS in the Keychain, on Linux in the Secret Service. Never on disk.</li>
+        <li><b>Unlock order:</b> Windows store → (with a team) SSH key → an error with a recovery suggestion.</li>
+        <li><b>If the key was rotated:</b> when another owner rotated it (<code>dek_id</code> mismatch), the new one is fetched via SSH.</li>
+      </ul>
+    </section>
+
+    <section id="repo">
+      <h2>What goes in the repo</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>File</th><th>In the repo</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>.sealbox/project.vault</code></td><td><span style="color:var(--green)">yes</span></td><td>The encrypted vault</td></tr>
+            <tr><td><code>.sealbox/project.names</code></td><td><span style="color:var(--green)">yes</span></td><td>Variable names and categories (no values). <code>vault list</code> reads this without opening the vault</td></tr>
+            <tr><td><code>.sealbox/project.masked</code></td><td><span style="color:var(--green)">yes</span></td><td>Placeholders of unnamed redacted entries</td></tr>
+            <tr><td><code>.sealbox/team.json</code></td><td><span style="color:var(--green)">yes</span></td><td>Members, roles, per-person locked copies of the DEK</td></tr>
+            <tr><td>Backups, lock files</td><td><span style="color:var(--red)">no</span></td><td>Kept out by <code>.sealbox/.gitignore</code></td></tr>
+            <tr><td><code>~/.sealbox/recovery/</code></td><td><span style="color:var(--red)">no</span></td><td>In your user folder, outside the project</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout warn"><p><b>Watch out:</b> if the root <code>.gitignore</code> excludes the whole <code>.sealbox/</code> folder, the <code>team</code> commands and <code>status</code> warn you. Secrets committed before the vault was added stay in git history and must be changed.</p></div>
+    </section>
+
+    <section id="yapilandirma">
+      <h2>Configuration: <code>sealbox.toml</code></h2>
+      <p>Copy <code>sealbox.example.toml</code> to the project root as <code>sealbox.toml</code>, or pass it with <code>--config</code>. <b>Never</b> put real secrets in this file.</p>
+      <div class="codeblock">
+        <span class="lbl">sealbox.toml</span>
+<pre>max_file_bytes = 524288
+
+<span class="c"># To explicitly override the default excludes (.env, *.pem, .git/** ...):</span>
+explicit_includes = [".env.example"]
+
+[scanner]
+<span class="c"># Names can't be found reliably with regex: list the names to redact explicitly.</span>
+person_names = []
+<span class="c"># Exact values, to suppress false positives:</span>
+allow_values = []
+disabled_rules = []
+
+[[scanner.custom_rules]]
+id = "project-code"
+category = "CUSTOM"
+pattern = 'PRJ-\d{6}'
+file_globs = ["*.py", "*.md"]</pre>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Field</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>excludes</code></td><td><code>.env</code>, <code>*.pem</code>, <code>*.key</code>, <code>id_rsa*</code>, <code>.git/**</code>, <code>.venv/**</code>, <code>node_modules/**</code>, <code>build/**</code>, <code>.ssh/**</code>…</td><td>Sensitive paths. Never scanned or written (<code>.env</code> is handled separately)</td></tr>
+            <tr><td><code>explicit_includes</code></td><td><code>[]</code></td><td>To override an exclude on purpose</td></tr>
+            <tr><td><code>max_file_bytes</code></td><td>512 KiB</td><td>Larger files are skipped</td></tr>
+            <tr><td><code>scanner.person_names</code></td><td><code>[]</code></td><td>Names to redact</td></tr>
+            <tr><td><code>scanner.custom_rules</code></td><td></td><td>Add rules (<code>id</code>, <code>category</code>, <code>pattern</code>, <code>file_globs</code>)</td></tr>
+            <tr><td><code>scanner.disabled_rules</code></td><td><code>[]</code></td><td>Turn rules off</td></tr>
+            <tr><td><code>scanner.allow_values</code></td><td><code>[]</code></td><td>Suppress false positives (exact value)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Settings left over from older versions — <code>[provider]</code>, <code>[policy]</code>, <code>share_dirs</code>, <code>audit_log_file</code> and <code>max_files_per_job</code> — are ignored.</p>
+    </section>
+
+    <section id="eklenti">
+      <h2>VS Code extension</h2>
+      <p>The extension is the <code>sealbox</code> command's remote control in your editor; the command does all the work. Install it from the <a href="https://marketplace.visualstudio.com/items?itemName=gokhanozdemir.sealbox" target="_blank" rel="noopener">Marketplace</a> or <a href="https://open-vsx.org/extension/gokhanozdemir/sealbox" target="_blank" rel="noopener">Open VSX</a> or:</p>
+      <div class="codeblock">
+<pre><span class="p">$ </span>code --install-extension sealbox-0.3.0.vsix</pre>
+      </div>
+      <h3>Settings</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Setting</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>sealbox.executable</code></td><td><code>""</code></td><td>Path to the <code>sealbox</code> program. If empty, the project's <code>.venv</code> is searched first, then PATH. The old <code>secureProxy.executable</code> setting is also read.</td></tr>
+            <tr><td><code>sealbox.checkOnSave</code></td><td><code>true</code></td><td>Check for exposed secrets when a file is opened or saved.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Features</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Feature</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td>Exposed-secret warnings</td><td><code>seal --check</code> runs when a file is opened or saved, and secrets get a yellow squiggle</td></tr>
+            <tr><td>Quick fix</td><td>Lightbulb → "Move this file's secrets into the vault"</td></tr>
+            <tr><td>Hover</td><td><code>__SECURE_..__</code>, <code>os.environ["X"]</code>, <code>process.env.X</code>, <code>System.getenv("X")</code> → "Show value" (with approval)</td></tr>
+            <tr><td>Give at runtime</td><td>Lightbulb or hover on redacted data → <code>vault expose</code></td></tr>
+            <tr><td>Status bar</td><td>Number of secrets in the vault and people on the team; a warning when there's no recovery backup</td></tr>
+            <tr><td>Run with the vault</td><td>Starts the command in the terminal with <code>sealbox exec</code> (approval every time)</td></tr>
+            <tr><td>Plain-run hint</td><td>If a program started with ▶ fails with <code>KeyError</code> for a variable in the vault, "Run with the vault" is suggested</td></tr>
+            <tr><td>Team and recovery</td><td>Set up a team and add or remove people from the menu. Recovery code, shares, kit, restore. These options are offered automatically when the key is missing</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>A revealed value only appears in a window that closes. If you choose "Copy", the clipboard is cleared after 30 seconds. Menu titles are in English or Turkish, following VS Code's language.</p>
+    </section>
+
+    <section id="gosterim">
+      <h2>What it shows and never shows</h2>
+      <div class="grid g2" style="gap:14px">
+        <div class="card"><h3 style="color:var(--green)">Shows</h3><p>File paths, category names and counts, line/column, variable names, placeholders, error types.</p></div>
+        <div class="card"><h3 style="color:var(--red)">Never shows</h3><p>Secret values (only in the approval window, on request), the vault key, the recovery code and shares (only in a window), foreign exception messages (type name only).</p></div>
+      </div>
+      <p style="margin-top:16px">Python <code>logging</code> records also pass through the leak filter.</p>
+    </section>
+
+    <section id="sinirlar">
+      <h2>Known limitations</h2>
+      <ul>
+        <li><b>Regex can't find every secret.</b> Unusually formatted passwords, and secrets that are split, concatenated, encoded (<code>\u0040</code>, hex, ROT13) or written in natural language, may be missed. Review the report and add <code>custom_rules</code> if needed.</li>
+        <li><b>Name detection isn't reliable.</b> Only the <code>person_names</code> list and optional <code>Detector</code> plug-ins (e.g. an NER model) are used.</li>
+        <li><b>Short values</b> (1–2 characters) can't be protected reliably.</li>
+        <li><b>Wiping memory can't be guaranteed.</b> The key is held as a <code>bytearray</code> and zeroed when done, but Python may make copies. Swap and crash dumps remain a risk.</li>
+        <li><b>Threat model:</b> it closes the main scenario, "the agent reads a file and sends it to the cloud". A deliberately malicious program running under the same user account that goes after the credential store directly isn't fully blocked.</li>
+        <li><b>The output filter</b> doesn't catch secrets printed reversed or in pieces. The approval window is the real protection.</li>
+        <li><b>A removed team member</b> can open the old vault from git history with the old DEK. <code>team remove</code> lists those values; change them at their source.</li>
+      </ul>
+    </section>
+
+    <section id="mimari">
+      <h2>Architecture</h2>
+      <div class="codeblock">
+<pre> file ──► SafeFS ──► Scanner ──► Sealer ──────────► file (os.environ["X"] / __SECURE_..__)
+          path/symlink regex +      move to vault /     │
+          checks       validators   redact              ▼
+                                                .sealbox/project.vault (AES-256-GCM)
+                                                key: credential store / SSH / recovery code
+ exec ──► approval window ──► secrets as environment variables ──► program (output filtered)</pre>
+      </div>
+      <div class="codeblock">
+<pre>sealbox/
+├── __main__.py             CLI: commands, help texts and examples
+├── cli_help.py             Help plumbing, "did you mean"
+├── i18n.py, i18n_en.py     Turkish / English
+├── status.py               init / status checklist
+├── config.py               Pydantic configuration + safe defaults
+├── vaultstore.py           Project vault and key unlocking
+├── runner.py               exec, vault reveal/set/expose/remove
+├── team.py                 Team sharing via GitHub SSH (team.json)
+├── recovery.py             Recovery code, 2-of-3 shares, kit
+├── approval.py             Approval and secret-value windows
+├── sealing/
+│   ├── sealer.py           Move-to-vault / redaction plan
+│   ├── rewriters.py        Literal → environment variable (Python, JS/TS, Java)
+│   └── file_operations.py  SafeFS: path safety, locking, atomic writes
+└── core/
+    ├── scanner.py          Regex rules + Detector plug-in interface
+    ├── validators.py       TCKN, email, phone, Luhn, IBAN, entropy
+    ├── tokenization.py     __SECURE_..__ placeholders
+    ├── crypto.py           AES-256-GCM
+    ├── envelope.py         DEK locks: Argon2id, X25519, SSH
+    ├── key_sharing.py      SLIP-39 Shamir sharing
+    └── leak_guard.py       Hiding secrets in output and logs</pre>
+      </div>
+    </section>
+
+    <section id="gecis">
+      <h2>Migrating from the old name (secure-ai-proxy)</h2>
+      <p>You don't need to do anything:</p>
+      <ul>
+        <li>Old <code>.secure_proxy/</code> vault folders and the <code>~/.secure_proxy/</code> recovery folder keep working as they are. New projects use <code>.sealbox/</code>.</li>
+        <li>The old <code>secure-ai-proxy</code> entry in Credential Manager moves to the <code>sealbox</code> name the first time the vault is opened, and the old one is deleted.</li>
+        <li><code>secure_proxy.toml</code> is still read (<code>sealbox.toml</code> takes priority). The <code>secure-ai-proxy</code> command keeps working for a while too.</li>
+      </ul>
+    </section>
+
+    <section id="gelistirme">
+      <h2>Development</h2>
+      <div class="codeblock">
+<pre><span class="p">$ </span>pip install -e ".[dev]"
+<span class="p">$ </span>pytest -q
+<span class="p">$ </span>ruff check sealbox tests
+<span class="p">$ </span>mypy sealbox
+<span class="p">$ </span>cd vscode-extension &amp;&amp; npm install &amp;&amp; npm test</pre>
+      </div>
+      <p>When adding a new message, wrap the text in <code>_("...")</code> and add its English version to <code>sealbox/i18n_en.py</code>. <code>tests/test_i18n.py</code> catches missing translations. CI: Ubuntu + Windows, Python 3.12/3.13.</p>
+    </section>
+  </main>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <div>
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06110a" stroke-width="2.6" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2" fill="#06110a"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        SealBox
+      </a>
+      <p style="margin:12px 0 0;max-width:320px">An open-source security tool that pulls secrets out of your files and seals them in an encrypted vault.</p>
+    </div>
+    <div><h4>Product</h4><ul><li><a href="index.html#nasil">How it works</a></li><li><a href="index.html#ozellikler">Features</a></li><li><a href="index.html#vscode">VS Code extension</a></li></ul></div>
+    <div><h4>Learn</h4><ul><li><a href="learn.html">Guides</a></li><li><a href="docs.html">Docs</a></li><li><a href="#yapilandirma">Configuration</a></li></ul></div>
+    <div><h4>Links</h4><ul><li><a href="https://github.com/gokhanozdemir-git/SealBox" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://pypi.org/project/sealbox/" target="_blank" rel="noopener">PyPI</a></li><li><a href="https://marketplace.visualstudio.com/items?itemName=gokhanozdemir.sealbox" target="_blank" rel="noopener">VS Code Marketplace</a></li><li><a href="https://open-vsx.org/extension/gokhanozdemir/sealbox" target="_blank" rel="noopener">Open VSX</a></li><li><a class="lang" href="tr/docs.html" hreflang="tr" lang="tr">Türkçe</a></li></ul></div>
+    <div class="bottom"><span>FSL-1.1-ALv2 license · SealBox 0.3.0</span><span>Never put real secrets in example files.</span></div>
+  </div>
+</footer>
+
+<script src="assets/main.js"></script>
+</body>
+</html>

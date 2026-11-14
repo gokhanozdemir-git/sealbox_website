@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Öğren · SealBox</title>
+  <meta name="description" content="SealBox'ı adım adım öğren: kurulum, ilk projeyi mühürleme, kasayla çalıştırma, ekip paylaşımı, kurtarma ve VS Code eklentisi.">
+  <meta name="theme-color" content="#0a0c0b">
+  <link rel="alternate" hreflang="en" href="../learn.html">
+  <link rel="alternate" hreflang="tr" href="learn.html">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235cc07a'/%3E%3Crect x='8' y='14' width='16' height='12' rx='2' fill='%2306110a'/%3E%3Cpath d='M11 14v-3a5 5 0 0 1 10 0v3' stroke='%2306110a' stroke-width='2.6' fill='none'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav class="nav always-solid" aria-label="Ana menü">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06110a" stroke-width="2.6" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2" fill="#06110a"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      SealBox
+    </a>
+    <button class="nav-toggle" aria-label="Menüyü aç" aria-expanded="false">☰</button>
+    <div class="nav-links">
+      <a href="index.html#nasil">Nasıl çalışır</a>
+      <a href="learn.html" class="active">Öğren</a>
+      <a href="docs.html">Dokümantasyon</a>
+      <a href="index.html#vscode">VS Code</a>
+      <a href="https://github.com/gokhanozdemir-git/SealBox" target="_blank" rel="noopener">GitHub</a>
+      <span class="lang-switch" aria-label="Dil"><a class="lang" href="../learn.html" hreflang="en" lang="en">EN</a><a class="on" aria-current="true">TR</a></span>
+      <a class="btn-sm" href="#baslangic">Başla</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="wrap">
+    <p class="kicker">Öğren</p>
+    <h1>SealBox'ı adım adım öğren</h1>
+    <p>Hiç güvenlik bilgisi gerekmez. Her bölüm önce ne yaptığımızı gündelik bir benzetmeyle anlatır, sonra komutu gösterir.</p>
+    <button class="btn side-toggle" type="button">Bölümler ☰</button>
+  </div>
+</header>
+
+<div class="docs two">
+  <aside class="sidebar" aria-label="Bölümler">
+    <h5>Başlarken</h5>
+    <a href="#baslangic">1. 5 dakikada başla</a>
+    <a href="#kavramlar">2. Temel kavramlar</a>
+    <h5>Günlük kullanım</h5>
+    <a href="#ilk-proje">3. İlk projeni mühürle</a>
+    <a href="#calistir">4. Kasayla çalıştır</a>
+    <a href="#kasa">5. Kasadaki değerler</a>
+    <h5>Ekip ve güvenlik</h5>
+    <a href="#ekip">6. Ekip arkadaşını ekle</a>
+    <a href="#kurtarma">7. Anahtarı kaybedersen</a>
+    <h5>Araçlar</h5>
+    <a href="#vscode">8. VS Code ile çalışmak</a>
+    <a href="#ci">9. CI'da açık sır kontrolü</a>
+    <a href="#sss">10. Sık sorulanlar</a>
+  </aside>
+
+  <main class="prose">
+
+    <!-- 1 -->
+    <section id="baslangic">
+      <h2>1. 5 dakikada başla</h2>
+      <div class="lesson-meta"><span>⏱ 5 dakika</span><span>Gereken: Python 3.12+</span></div>
+      <p>SealBox bir komut satırı aracı. Kurduktan sonra proje klasöründe birkaç komut çalıştırman yeterli.</p>
+
+      <h3>Kur</h3>
+      <div class="codeblock">
+<pre><span class="p">$ </span>pip install sealbox        <span class="c"># ya da: pipx install sealbox</span>
+<span class="p">$ </span>sealbox -V                 <span class="c"># sürümü göster: sealbox 0.3.0</span></pre>
+      </div>
+
+      <h3>Projeni kontrol et</h3>
+      <p><code>init</code> hiçbir dosyayı değiştirmez. Projeye bakar ve sıradaki adımları sırayla söyler:</p>
+      <div class="codeblock">
+<pre><span class="p">$ </span>cd projem
+<span class="p">$ </span>sealbox init
+<span class="c">sealbox 0.3.0 · proje: C:\projem</span>
+
+  <span style="color:var(--green)">✓</span> Kasa: henüz yok
+  <span class="c">·</span> Ekip kurulmamış (tek kişi)  <span class="c">→ sealbox team init --github &lt;ad&gt;</span>
+  <span style="color:var(--yellow)">⚠</span> 3 dosyada açık sır var       <span class="c">→ sealbox seal</span>
+
+<span class="c">Sıradaki adımlar:</span>
+  1) sealbox seal
+  2) sealbox recovery setup</pre>
+      </div>
+
+      <h3>Mühürle, yedekle, çalıştır</h3>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox seal                     <span class="c"># sırları kasaya taşı</span>
+<span class="p">$ </span>sealbox recovery setup           <span class="c"># kurtarma kodu (bir kez)</span>
+<span class="p">$ </span>sealbox exec -- python app.py    <span class="c"># programı sırlarla çalıştır</span>
+<span class="p">$ </span>git add .sealbox
+<span class="p">$ </span>git commit -m "kasa"</pre>
+      </div>
+      <div class="callout"><p><b>İpucu:</b> Takıldığın her yerde <code>sealbox status</code> yaz. Sorunlu her satırın yanında çözüm komutu yazar. Bir komutun ayrıntısı için <code>sealbox help seal</code>. Yanlış yazarsan (<code>sealbox sael</code>) "Bunu mu demek istediniz: seal?" diye düzeltir.</p></div>
+      <div class="pager"><span></span><a class="next" href="#kavramlar"><small>Sonraki</small>Temel kavramlar →</a></div>
+    </section>
+
+    <!-- 2 -->
+    <section id="kavramlar">
+      <h2>2. Temel kavramlar</h2>
+      <p>SealBox'ı anlamak için beş kavram yeter. Hepsini evden bir benzetmeyle anlatıyoruz.</p>
+
+      <div class="analogy">
+        <span class="ic">🏠</span>
+        <p><b>Büyük resim:</b> Evine temizlikçi çağırdığını düşün (ajan). İşini yapması için her odaya girmesi gerekiyor. Mücevherleri masada bırakmazsın, kasaya koyarsın. Masaya da "mücevher kasada" diye not bırakırsın. Temizlikçi notu görür ama mücevheri göremez. SealBox bunu kodun için yapıyor.</p>
+      </div>
+
+      <div class="concepts">
+        <div class="concept">
+          <h4>🔐 Kasa (vault)</h4>
+          <p><code>.sealbox/project.vault</code>. Bütün sırlar burada AES-256-GCM ile şifreli durur. Şifreli olduğu için repoya girebilir.</p>
+          <span class="like">Benzetme: evdeki çelik kasa.</span>
+        </div>
+        <div class="concept">
+          <h4>🗝 Kasa anahtarı (DEK)</h4>
+          <p>Kasayı açan tek anahtar. Diskte durmaz. Windows Kimlik Bilgisi Yöneticisi'nde, macOS Anahtar Zinciri'nde ya da Linux Secret Service'te saklanır.</p>
+          <span class="like">Benzetme: kasanın anahtarı. Cebinde, masada değil.</span>
+        </div>
+        <div class="concept">
+          <h4>🏷 Etiket (yer tutucu)</h4>
+          <p><code>__SECURE_TCKN_103d…__</code> gibi rastgele bir ad. E-posta, TCKN ve IBAN gibi kişisel verilerin yerine yazılır.</p>
+          <span class="like">Benzetme: masadaki "mücevher kasada" notu.</span>
+        </div>
+        <div class="concept">
+          <h4>🌱 Ortam değişkeni</h4>
+          <p>Kodda parola yerine <code>os.environ["DB_PASSWORD"]</code> yazar. Değer, program çalışırken dışarıdan verilir.</p>
+          <span class="like">Benzetme: mücevheri yalnızca düğün günü kasadan çıkarmak.</span>
+        </div>
+        <div class="concept">
+          <h4>✅ Onay penceresi</h4>
+          <p>Bir program sırları istediğinde hangi değerlerin verileceğini gösteren pencere. Onu atlatan bir ayar yok.</p>
+          <span class="like">Benzetme: kasayı her açışta sana sorulması.</span>
+        </div>
+        <div class="concept">
+          <h4>🧯 Kurtarma kodu</h4>
+          <p>Anahtar kaybolursa kasayı açan yedek kod. İstersen 3 parçaya böl, herhangi 2'si yeter.</p>
+          <span class="like">Benzetme: anneannedeki yedek anahtar.</span>
+        </div>
+      </div>
+
+      <h3>Ne nereye gider?</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Ne bulundu</th><th>Ne olur</th></tr></thead>
+          <tbody>
+            <tr><td>Kodda parola, token, API anahtarı (tam bir metin)</td><td>Kasaya taşınır, kodda <code>os.environ["X"]</code> / <code>process.env.X</code> / <code>System.getenv("X")</code> olur</td></tr>
+            <tr><td>Aynı değerin yorumdaki tekrarı</td><td>Etiketle karalanır</td></tr>
+            <tr><td>E-posta, TCKN, telefon, IBAN, isim</td><td>Etiketle karalanır (gerekirse <code>vault expose</code>)</td></tr>
+            <tr><td><code>.env</code> dosyası</td><td>Gizli satırlar kasaya, <code>.env</code> silinir, <code>.env.sealed</code> kalır</td></tr>
+            <tr><td>JSON / YAML / TOML ayarı</td><td>Karalanır, hangi ortam değişkenini okuman gerektiği raporlanır</td></tr>
+            <tr><td>URL içindeki parça ya da desteklenmeyen dil</td><td><b>Dokunulmaz</b>, <code>[!]</code> uyarısı verilir, elle taşıman gerekir</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pager"><a href="#baslangic"><small>Önceki</small>← 5 dakikada başla</a><a class="next" href="#ilk-proje"><small>Sonraki</small>İlk projeni mühürle →</a></div>
+    </section>
+
+    <!-- 3 -->
+    <section id="ilk-proje">
+      <h2>3. İlk projeni mühürle</h2>
+      <div class="lesson-meta"><span>⏱ 5 dakika</span><span>Komutlar: <code>seal --check</code>, <code>seal</code></span></div>
+
+      <h3>Önce sadece bak</h3>
+      <p><code>--check</code> hiçbir şeye dokunmaz. Açık sır varsa çıkış kodu 1 döner, böylece CI'da da kullanılabilir.</p>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox seal --check
+<span class="c">.env → .env.sealed: 1 değer kasaya taşındı (DB_PASSWORD)</span>
+<span class="c">3 dosya tarandı (0.0 sn).</span>
+<span style="color:var(--yellow)">Diskte karalanmamış sır var. 'sealbox seal' çalıştırın.</span></pre>
+      </div>
+
+      <h3>Mühürle</h3>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox seal                     <span class="c"># tüm proje</span>
+<span class="p">$ </span>sealbox seal src/config.py       <span class="c"># yalnızca bir dosya</span></pre>
+      </div>
+      <div class="callout warn"><p><b>Proje kökünden çalıştır.</b> <code>src</code> gibi bir alt klasörden çalıştırırsan ve üstte <code>.env</code>, <code>.git</code> ya da kasa varsa SealBox durur, çünkü üstteki <code>.env</code> açıkta kalırdı. O klasörü bilerek seçiyorsan <code>-w .</code> ver.</p></div>
+
+      <h3>Dosyalarına ne olur?</h3>
+      <p>Her dil, sırrı kendi standart yoluyla okur. Kodun mantığı değişmez:</p>
+      <div class="grid g3" style="gap:14px">
+        <div class="code-card"><header>Python</header><pre class="code"><span class="c"># önce</span>
+KEY = <span class="s">"sk_live_51N…"</span>
+<span class="c"># sonra</span>
+KEY = os.environ[<span class="s">"KEY"</span>]</pre></div>
+        <div class="code-card"><header>JavaScript / TS</header><pre class="code"><span class="c">// önce</span>
+<span class="k">const</span> key = <span class="s">"sk_live_51N…"</span>
+<span class="c">// sonra</span>
+<span class="k">const</span> key = process.env.KEY</pre></div>
+        <div class="code-card"><header>Java</header><pre class="code"><span class="c">// önce</span>
+String key = <span class="s">"sk_live_51N…"</span>;
+<span class="c">// sonra</span>
+String key = System.getenv(<span class="s">"KEY"</span>);</pre></div>
+      </div>
+      <p style="margin-top:18px">Aynı dosyayı geri alıp tekrar mühürlemek kasada kopya oluşturmaz, çünkü aynı değer her zaman aynı kayda bağlanır.</p>
+      <div class="callout"><p><b>Java notu:</b> <code>static final</code> sabit artık derleme anında değil çalışırken dolar. Sabiti <code>switch case</code> ya da anotasyon içinde kullanan kod taşımadan sonra derlenmez. Sırlar için bu pek olmaz.</p></div>
+      <div class="pager"><a href="#kavramlar"><small>Önceki</small>← Temel kavramlar</a><a class="next" href="#calistir"><small>Sonraki</small>Kasayla çalıştır →</a></div>
+    </section>
+
+    <!-- 4 -->
+    <section id="calistir">
+      <h2>4. Programı kasayla çalıştır</h2>
+      <div class="analogy">
+        <span class="ic">🎟</span>
+        <p><b>Benzetme:</b> <code>exec</code>, kapıdaki görevli gibi çalışır. Programın "parolaya ihtiyacım var" der. Görevli sana "şu 4 değeri vereyim mi?" diye sorar. Sen evet dersen değerler yalnızca o çalıştırma boyunca verilir, iş bitince geri alınır.</p>
+      </div>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox exec -- python app.py        <span class="c"># Python</span>
+<span class="p">$ </span>sealbox exec -- npm start            <span class="c"># Node.js</span>
+<span class="p">$ </span>sealbox exec -- java Main.java       <span class="c"># Java</span>
+<span class="p">$ </span>sealbox exec -- mvn spring-boot:run  <span class="c"># Maven / Gradle</span></pre>
+      </div>
+      <ul>
+        <li><code>--</code> işaretinden sonraki her şey senin normal komutun.</li>
+        <li>Önce onay penceresi açılır. Onayı atlatan bir bayrak ya da ortam değişkeni bilerek yok.</li>
+        <li>Programın çıktısında bilinen bir sır geçerse <code>[GİZLİ:..]</code> olarak basılır.</li>
+      </ul>
+      <div class="callout warn"><p><b>Not:</b> Çıktı bir borudan geçtiği için etkileşimli ya da renkli terminal programları biraz farklı davranabilir. Süzgeç ters çevrilmiş ya da parçalanmış yazdırmayı yakalamaz. Asıl koruma onay penceresidir.</p></div>
+
+      <h3>Karalanmış veriyi program kullanıyorsa</h3>
+      <p>E-posta ya da TCKN gibi veriler etiketle karalanır, çünkü çoğu zaman çalışma anında gerekmez. Program gerçekten kullanıyorsa onu ortam değişkenine çevir:</p>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox vault expose __SECURE_EMAIL_8f2c…__
+<span class="p">$ </span>sealbox vault expose __SECURE_EMAIL_8f2c…__ --as ADMIN_EMAIL</pre>
+      </div>
+      <div class="pager"><a href="#ilk-proje"><small>Önceki</small>← İlk projeni mühürle</a><a class="next" href="#kasa"><small>Sonraki</small>Kasadaki değerler →</a></div>
+    </section>
+
+    <!-- 5 -->
+    <section id="kasa">
+      <h2>5. Kasadaki değerleri yönet</h2>
+      <p>Değerler hiçbir zaman terminale kendiliğinden yazılmaz. Göstermek ve silmek onay ister.</p>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox vault list                       <span class="c"># adlar ve etiketler (değer yok)</span>
+<span class="p">$ </span>sealbox vault reveal DB_PASSWORD         <span class="c"># onay penceresinde göster</span>
+<span class="p">$ </span>sealbox vault reveal __SECURE_TCKN_…__   <span class="c"># karalanmış veriye bak</span>
+<span class="p">$ </span>sealbox vault set DB_PASSWORD            <span class="c"># değiştir ya da ekle</span>
+<span class="p">$ </span>sealbox vault remove --unused            <span class="c"># kullanılmayanları sil</span></pre>
+      </div>
+      <p>Geri almak kasadan silmez. Değer değiştiyse eskisi sahipsiz kalır, <code>vault remove --unused</code> temizler. Bir dosya etiketi ya da değişken adını hâlâ kullanıyorsa kayıt silinmez (zorlamak için <code>--force</code>).</p>
+      <div class="pager"><a href="#calistir"><small>Önceki</small>← Kasayla çalıştır</a><a class="next" href="#ekip"><small>Sonraki</small>Ekip arkadaşını ekle →</a></div>
+    </section>
+
+    <!-- 6 -->
+    <section id="ekip">
+      <h2>6. Ekip arkadaşını ekle</h2>
+      <div class="lesson-meta"><span>⏱ 10 dakika</span><span>Gereken: GitHub hesabında şifreli SSH anahtarı</span></div>
+      <div class="analogy">
+        <span class="ic">🔑</span>
+        <p><b>Benzetme:</b> Kasanın anahtarını kopyalayıp her arkadaşına <b>kendi asma kilidiyle kilitli</b> bir kutuda veriyorsun. Kutuları herkes görebilir, çünkü repoda duruyorlar. Ama her kutuyu yalnızca sahibinin anahtarı açar. O anahtar da GitHub'daki SSH anahtarı.</p>
+      </div>
+
+      <h3>Ön hazırlık (herkes, bir kez)</h3>
+      <p>Bilgisayarında şifreli bir SSH anahtarı olmalı ve açık kısmı GitHub hesabına eklenmiş olmalı. Şifresiz anahtar reddedilir, çünkü bilgisayardaki herhangi bir program (ajanlar dahil) onu okuyabilir.</p>
+      <div class="codeblock">
+<pre><span class="p">$ </span>ssh-keygen -t ed25519              <span class="c"># sorulunca şifre koy</span>
+<span class="p">$ </span>ssh-keygen -p -f ~/.ssh/id_ed25519 <span class="c"># var olan anahtara sonradan şifre ekle</span>
+<span class="c"># ~/.ssh/id_ed25519.pub içeriğini GitHub → Settings → SSH keys'e ekle</span></pre>
+      </div>
+
+      <h3>Sen (sahip)</h3>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox team init --github benim-adim   <span class="c"># ekibi kur, sahip sensin</span>
+<span class="p">$ </span>sealbox team add arkadasim              <span class="c"># github.com/arkadasim.keys</span>
+<span class="p">$ </span>sealbox team add ayse --owner           <span class="c"># o da kişi ekleyip çıkarabilsin</span>
+<span class="p">$ </span>git add .sealbox
+<span class="p">$ </span>git commit -m "ekibe arkadasim eklendi"
+<span class="p">$ </span>git push</pre>
+      </div>
+
+      <h3>Arkadaşın</h3>
+      <div class="codeblock">
+<pre><span class="p">$ </span>git pull
+<span class="p">$ </span>sealbox exec -- python app.py   <span class="c"># ilk açılışta SSH şifresi pencerede sorulur</span></pre>
+      </div>
+      <p>İlk açılıştan sonra anahtar Windows deposunda önbelleğe alınır, bir daha sorulmaz.</p>
+
+      <h3>Birini çıkarmak</h3>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox team remove arkadasim   <span class="c"># kasa anahtarı yenilenir</span>
+<span class="p">$ </span>sealbox team list               <span class="c"># üyeler ve SSH parmak izleri</span></pre>
+      </div>
+      <div class="callout danger"><p><b>Unutma:</b> Çıkarılan kişi git geçmişindeki eski kasayı eski anahtarla açabilir. <code>team remove</code> bu yüzden görmüş olabileceği değerleri listeler. O parolaları kendi servislerinden (veritabanı, API paneli) yenile.</p></div>
+      <div class="callout warn"><p><b>.gitignore kontrolü:</b> Kök <code>.gitignore</code> bütün <code>.sealbox/</code> klasörünü dışlıyorsa kasa repoya girmez. <code>team</code> komutları ve <code>status</code> bu durumda uyarır.</p></div>
+      <div class="pager"><a href="#kasa"><small>Önceki</small>← Kasadaki değerler</a><a class="next" href="#kurtarma"><small>Sonraki</small>Anahtarı kaybedersen →</a></div>
+    </section>
+
+    <!-- 7 -->
+    <section id="kurtarma">
+      <h2>7. Anahtarı kaybedersen</h2>
+      <div class="analogy">
+        <span class="ic">🧯</span>
+        <p><b>Benzetme:</b> Ev anahtarını kaybetmek için her zaman bir sebep vardır: Windows sıfırlanır, bilgisayar değişir, profil bozulur. Kurtarma kodu, güvendiğin bir yerde duran yedek anahtardır. Kodu 3 parçaya bölersen biri annende, biri kasada, biri USB'de durabilir. Herhangi 2'si kapıyı açar.</p>
+      </div>
+
+      <h3>Bugün, her şey yolundayken (bir kez)</h3>
+      <div class="codeblock">
+<pre><span class="p">$ </span>sealbox recovery setup                    <span class="c"># kod pencerede gösterilir, bir yere yaz</span>
+<span class="p">$ </span>sealbox recovery shares                   <span class="c"># isteğe bağlı: 2-of-3 parçaya böl</span>
+<span class="p">$ </span>sealbox recovery export D:\proje.sapkit   <span class="c"># isteğe bağlı: USB / bulut kiti</span></pre>
+      </div>
+      <p>Kod ve parçalar terminale hiçbir zaman yazılmaz, yalnızca pencerede gösterilir. Kurtarma kopyaları <code>~/.sealbox/recovery/</code> altında durur, yani repoya girmez. Kod kullanıcı başına bir tanedir. Yeni projeler de sana kod sorulmadan bu kurtarmaya bağlanır.</p>
+
+      <h3>Kötü gün geldiğinde</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Durum</th><th>Ne yapmalı</th></tr></thead>
+          <tbody>
+            <tr><td>Windows sıfırlandı, proje klasörü duruyor</td><td><code>sealbox recovery restore</code> ile kodu ya da 2 parçayı gir</td></tr>
+            <tr><td>Ekiptesin, bir sahip anahtarı yeniledi</td><td>Bir şey yapma. Yeni anahtar SSH ile kendiliğinden alınır</td></tr>
+            <tr><td>Yeni bilgisayar, kasa klasörü de yok</td><td><code>sealbox recovery restore --kit D:\proje.sapkit</code></td></tr>
+            <tr><td>Kod da yok, kit de yok, ekip de yok</td><td><code>sealbox vault reset</code>: yeni boş kasa açılır, eskisi kenara kaldırılır. Sırları servislerden yeniden al</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><p><b>Kilit açma sırası:</b> Windows deposu → (ekip varsa) SSH anahtarı → hata mesajı ve kurtarma önerisi. Ne yapacağını bilmiyorsan <code>sealbox status</code> sana söyler.</p></div>
+      <div class="pager"><a href="#ekip"><small>Önceki</small>← Ekip arkadaşını ekle</a><a class="next" href="#vscode"><small>Sonraki</small>VS Code ile çalışmak →</a></div>
+    </section>
+
+    <!-- 8 -->
+    <section id="vscode">
+      <h2>8. VS Code ile çalışmak</h2>
+      <p>Eklenti işi kendisi yapmaz. Düğmeleri <code>sealbox</code> komutuna bağlar. O yüzden önce komutun kurulu olması gerekir.</p>
+
+      <h3>Kurulum</h3>
+      <ol>
+        <li><code>pip install sealbox</code> (ya da projenin <code>.venv</code>'ine kur).</li>
+        <li>VS Code'da Eklentiler (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>) → <b>SealBox</b> ara → Yükle. Ya da <a href="https://marketplace.visualstudio.com/items?itemName=gokhanozdemir.sealbox" target="_blank" rel="noopener">Marketplace sayfası</a>. Cursor, Windsurf ya da VSCodium'da <a href="https://open-vsx.org/extension/gokhanozdemir/sealbox" target="_blank" rel="noopener">Open VSX</a>'ten gelir.</li>
+        <li>Elinde <code>.vsix</code> dosyası varsa: <code>code --install-extension sealbox-0.3.0.vsix</code></li>
+      </ol>
+      <p>Eklenti önce proje klasöründeki ve üstündeki <code>.venv</code> içinde arar, sonra PATH'e bakar. Başka bir yerdeyse ayarlardan <code>sealbox.executable</code> değerine yolunu yaz.</p>
+
+      <h3>Günlük akış</h3>
+      <ol>
+        <li><b>Yaz.</b> Bir dosyaya parola yazıp kaydettiğinde o yer <span style="text-decoration:underline wavy var(--yellow);text-underline-offset:4px">sarı çizilir</span>.</li>
+        <li><b>Ampule tıkla.</b> "Bu dosyadaki sırları kasaya taşı" de. Değer kasaya gider, kod <code>os.environ[...]</code> olur.</li>
+        <li><b>Üzerine gel.</b> <code>__SECURE_..__</code> etiketi ya da <code>os.environ["X"]</code> üzerinde "Değeri göster" çıkar. Onay penceresinden sonra görünür. "Kopyala" dersen pano 30 saniye sonra temizlenir.</li>
+        <li><b>Çalıştır.</b> Komut paletinden "SealBox: Programı kasayla çalıştır" de. Düz ▶ ile çalıştırıp <code>KeyError</code> alırsan eklenti bunu kendisi önerir.</li>
+        <li><b>Durum çubuğuna bak.</b> <code>🔒 3 sır kasada · 👥 2 kişi</code>. Kurtarma kodu yoksa <code>⚠ yedeksiz</code> yazar. Tıklayınca menü açılır.</li>
+      </ol>
+
+      <h3>Komut paleti (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → "SealBox")</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Komut</th><th>Karşılığı</th></tr></thead>
+          <tbody>
+            <tr><td>SealBox: Menü</td><td>Tüm işlemler tek listede</td></tr>
+            <tr><td>SealBox: Projeyi tara (açık sır var mı?)</td><td><code>seal --check</code></td></tr>
+            <tr><td>SealBox: Bu dosyadaki sırları kasaya taşı</td><td><code>seal &lt;dosya&gt;</code></td></tr>
+            <tr><td>SealBox: Projedeki tüm sırları kasaya taşı</td><td><code>seal</code></td></tr>
+            <tr><td>SealBox: Programı kasayla çalıştır</td><td><code>exec -- …</code></td></tr>
+            <tr><td>SealBox: Kasadaki bir değeri göster</td><td><code>vault reveal</code></td></tr>
+            <tr><td>SealBox: Karalanmış veriyi programa çalışırken ver</td><td><code>vault expose</code></td></tr>
+            <tr><td>SealBox: Kullanılmayan kayıtları kasadan sil</td><td><code>vault remove --unused</code></td></tr>
+            <tr><td>SealBox: Ekibe kişi ekle (GitHub kullanıcısı)</td><td><code>team add</code></td></tr>
+            <tr><td>SealBox: Kurtarma kodu oluştur</td><td><code>recovery setup</code></td></tr>
+            <tr><td>SealBox: Kasayı kurtarma koduyla geri aç</td><td><code>recovery restore</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><p><b>Güvenlik:</b> Kurtarma kodu, parçalar ve SSH şifresi eklentiden geçmez. Hepsi Python'un açtığı ayrı pencerelerde gösterilir ya da sorulur. Eklenti yalnızca <code>seal --check --json</code> çıktısını okur. Bu çıktıda satır, sütun ve kategori vardır, değer yoktur.</p></div>
+      <div class="pager"><a href="#kurtarma"><small>Önceki</small>← Anahtarı kaybedersen</a><a class="next" href="#ci"><small>Sonraki</small>CI'da açık sır kontrolü →</a></div>
+    </section>
+
+    <!-- 9 -->
+    <section id="ci">
+      <h2>9. CI'da açık sır kontrolü</h2>
+      <p><code>seal --check</code> açık sır bulursa çıkış kodu 1 döner. Bunu pull request'lerde bekçi olarak kullan:</p>
+      <div class="codeblock">
+        <span class="lbl">.github/workflows/sealbox.yml</span>
+<pre>name: sealbox
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install sealbox
+      - run: sealbox seal --check</pre>
+      </div>
+      <p>Bu adım kasayı açmaz, anahtar gerektirmez. Yalnızca diskte karalanmamış sır olup olmadığına bakar. Makinenin okuyabileceği rapor için <code>--json</code> ekle.</p>
+      <div class="pager"><a href="#vscode"><small>Önceki</small>← VS Code ile çalışmak</a><a class="next" href="#sss"><small>Sonraki</small>Sık sorulanlar →</a></div>
+    </section>
+
+    <!-- 10 -->
+    <section id="sss">
+      <h2>10. Sık sorulanlar</h2>
+      <h3>SealBox bir proxy mi?</h3>
+      <p>Hayır. Ajanlar dosyaları doğrudan diskten okur, aradaki bir proxy bunu göremez. SealBox sırları dosyalardan kalıcı olarak çıkarır.</p>
+      <h3>Kasayı repoya koymak güvenli mi?</h3>
+      <p>Evet, bunun için tasarlandı. <code>project.vault</code> AES-256-GCM ile şifreli. Anahtarı repoda değil. <code>.sealbox/.gitignore</code>, yedekleri ve kilit dosyalarını dışarıda bırakır.</p>
+      <h3>Daha önce commit ettiğim sırlar ne olacak?</h3>
+      <p>Git geçmişinde kalırlar; SealBox geçmişi silmez. <code>sealbox history</code>, kasadaki hangi değerlerin eski commit'lerde geçtiğini ve push'lanıp push'lanmadığını söyler. O değerleri servislerinden değiştir, bir daha olmaması için <code>sealbox hook install</code> çalıştır.</p>
+      <h3>Her sırrı bulur mu?</h3>
+      <p>Hayır. Regex; parçalanmış, kodlanmış (<code>\u0040</code>, hex, ROT13) ya da düz yazı içindeki sırları kaçırabilir. Raporu incele, gerekirse <code>custom_rules</code> ekle. İsimler için <code>person_names</code> listesini kullan.</p>
+      <h3>İngilizce kullanabilir miyim?</h3>
+      <p><code>sealbox --lang en …</code> ya da <code>SEALBOX_LANG=en</code>. Varsayılan dil bilgisayarın dilidir. Eklenti de VS Code'un dilini izler.</p>
+      <h3>Eski adla (secure-ai-proxy) kurmuştum.</h3>
+      <p>Hiçbir şey yapmana gerek yok. Eski <code>.secure_proxy/</code> klasörleri ve <code>secure_proxy.toml</code> okunur. Kimlik deposundaki eski kayıt ilk açılışta yeni ada taşınır.</p>
+      <div class="pager"><a href="#ci"><small>Önceki</small>← CI'da açık sır kontrolü</a><a class="next" href="docs.html"><small>Devam</small>Dokümantasyon →</a></div>
+    </section>
+  </main>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <div>
+      <a class="brand" href="index.html">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06110a" stroke-width="2.6" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2" fill="#06110a"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        SealBox
+      </a>
+      <p style="margin:12px 0 0;max-width:320px">Sırları dosyalardan çıkarıp şifreli bir kasaya mühürleyen açık kaynak güvenlik aracı.</p>
+    </div>
+    <div><h4>Ürün</h4><ul><li><a href="index.html#nasil">Nasıl çalışır</a></li><li><a href="index.html#ozellikler">Özellikler</a></li><li><a href="index.html#vscode">VS Code eklentisi</a></li></ul></div>
+    <div><h4>Öğren</h4><ul><li><a href="learn.html">Rehberler</a></li><li><a href="docs.html">Dokümantasyon</a></li><li><a href="docs.html#yapilandirma">Yapılandırma</a></li></ul></div>
+    <div><h4>Bağlantılar</h4><ul><li><a href="https://github.com/gokhanozdemir-git/SealBox" target="_blank" rel="noopener">GitHub</a></li><li><a href="https://pypi.org/project/sealbox/" target="_blank" rel="noopener">PyPI</a></li><li><a href="https://marketplace.visualstudio.com/items?itemName=gokhanozdemir.sealbox" target="_blank" rel="noopener">VS Code Marketplace</a></li><li><a href="https://open-vsx.org/extension/gokhanozdemir/sealbox" target="_blank" rel="noopener">Open VSX</a></li><li><a class="lang" href="../learn.html" hreflang="en" lang="en">English</a></li></ul></div>
+    <div class="bottom"><span>FSL-1.1-ALv2 lisansı · SealBox 0.3.0</span><span>Gerçek sırları asla örnek dosyalara yazmayın.</span></div>
+  </div>
+</footer>
+
+<script src="../assets/main.js"></script>
+</body>
+</html>

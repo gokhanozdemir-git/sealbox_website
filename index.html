@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SealBox — Give your secrets to a vault, not to your agents</title>
+  <meta name="description" content="SealBox finds passwords, API keys and personal data in your code files and moves them into an encrypted vault. AI coding agents can read your files and still see no secrets.">
+  <meta property="og:title" content="SealBox — Give your secrets to a vault, not to your agents">
+  <meta property="og:description" content="A security tool and VS Code extension that pulls secrets out of your files and seals them in an AES-256-GCM vault.">
+  <meta property="og:image" content="assets/flow.jpeg">
+  <meta name="theme-color" content="#0a0c0b">
+  <link rel="alternate" hreflang="en" href="index.html">
+  <link rel="alternate" hreflang="tr" href="tr/index.html">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235cc07a'/%3E%3Crect x='8' y='14' width='16' height='12' rx='2' fill='%2306110a'/%3E%3Cpath d='M11 14v-3a5 5 0 0 1 10 0v3' stroke='%2306110a' stroke-width='2.6' fill='none'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<nav class="nav" aria-label="Main menu">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06110a" stroke-width="2.6" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2" fill="#06110a"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      SealBox
+    </a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+    <div class="nav-links">
+      <a href="#nasil">How it works</a>
+      <a href="#indir">Install</a>
+      <a href="learn.html">Learn</a>
+      <a href="docs.html">Docs</a>
+      <a href="#vscode">VS Code</a>
+      <a href="https://github.com/gokhanozdemir-git/SealBox" target="_blank" rel="noopener">GitHub</a>
+      <span class="lang-switch" aria-label="Language"><a class="on" aria-current="true">EN</a><a class="lang" href="tr/index.html" hreflang="tr" lang="tr">TR</a></span>
+      <a class="btn-sm" href="learn.html#baslangic">Get started</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <video class="hero-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture>
+    <source src="assets/hero.mp4" type="video/mp4">
+  </video>
+  <div class="wrap">
+    <div class="hero-content">
+      <span class="eyebrow"><span class="dot"></span>v0.3.0 · Python · JS/TS · Java</span>
+      <h1>Give your secrets to a <span class="g">vault</span>, not to your agents.</h1>
+      <p class="lead">
+        SealBox finds the passwords, API keys and personal data in your project,
+        pulls them out of your files and locks them in an encrypted vault. Claude Code, Copilot or Cursor
+        can read your files and still see no secrets. Your program only gets them at runtime, after you approve.
+      </p>
+
+      <div class="term" role="img" aria-label="Terminal: pip install sealbox, sealbox seal, sealbox exec">
+        <div class="term-bar">
+          <i></i><i></i><i></i><span>terminal</span>
+          <button class="copy" type="button" data-copy="pip install sealbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>pip install sealbox</button>
+        </div>
+        <div class="term-body" id="typed"><span class="p">$ </span><span class="cursor"></span></div>
+      </div>
+
+      <div class="hero-cta">
+        <a class="btn primary" href="learn.html#baslangic">
+          Start in 5 minutes
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn" href="#vscode">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 2.2 8.3 10.7 3.6 7.1 2 7.9v8.2l1.6.8 4.7-3.6 9.3 8.5L22 20V4zM4 14.3V9.7l2.6 2.3zm13.6 1.9-5.5-4.2 5.5-4.2z"/></svg>
+          VS Code extension
+        </a>
+      </div>
+
+      <div class="hero-meta">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>AES-256-GCM vault</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg>Teams via GitHub SSH</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Recovery code</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">scroll</div>
+</header>
+
+<div class="agents">
+  <span>Whichever agent you work with:</span>
+  <b>Claude Code</b><b>GitHub Copilot</b><b>Cursor</b><b>Windsurf</b><b>…and any tool that reads files</b>
+</div>
+
+<section class="stats" aria-label="SealBox">
+  <div class="wrap">
+    <div class="stat reveal"><b>3</b><span>languages: Python · JS/TS · Java</span></div>
+    <div class="stat reveal"><b>256</b><span>bit AES-GCM vault</span></div>
+    <div class="stat reveal"><b>2 of 3</b><span>recovery shares open the vault</span></div>
+    <div class="stat reveal"><b>0</b><span>plain-text secrets left on disk</span></div>
+  </div>
+</section>
+
+<!-- ============ INSTALL / PLATFORMS ============ -->
+<section class="block alt" id="indir">
+  <div class="wrap">
+    <div class="center reveal">
+      <p class="kicker">Get SealBox</p>
+      <h2 class="title">One engine. Every editor.</h2>
+      <p class="sub">The engine comes from PyPI, the editor extension from the VS Code Marketplace or Open VSX. Both are built from the same GitHub repo and share one version number: <code>0.3.0</code>.</p>
+    </div>
+    <div class="grid g4">
+      <a class="card reveal" href="https://pypi.org/project/sealbox/" target="_blank" rel="noopener">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 2 9 5v10l-9 5-9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg></div>
+        <h3>PyPI</h3>
+        <p>The engine and the <code>sealbox</code> command. Python 3.12+ on Windows, macOS and Linux.</p>
+        <span class="more">pypi.org/project/sealbox →</span>
+      </a>
+      <a class="card reveal" href="https://marketplace.visualstudio.com/items?itemName=gokhanozdemir.sealbox" target="_blank" rel="noopener">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M17.6 2.2 8.3 10.7 3.6 7.1 2 7.9v8.2l1.6.8 4.7-3.6 9.3 8.5L22 20V4zM4 14.3V9.7l2.6 2.3zm13.6 1.9-5.5-4.2 5.5-4.2z"/></svg></div>
+        <h3>VS Code Marketplace</h3>
+        <p>Squiggles, quick fixes, hovers and <b>Run with Vault</b> inside VS Code. Installs the engine for you if it's missing.</p>
+        <span class="more">Install →</span>
+      </a>
+      <a class="card reveal" href="https://open-vsx.org/extension/gokhanozdemir/sealbox" target="_blank" rel="noopener">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/></svg></div>
+        <h3>Open VSX</h3>
+        <p>The same extension for Cursor, Windsurf, VSCodium and other VS Code–based editors.</p>
+        <span class="more">open-vsx.org →</span>
+      </a>
+      <a class="card reveal" href="https://github.com/gokhanozdemir-git/SealBox" target="_blank" rel="noopener">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 2.9.8.1-.7.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg></div>
+        <h3>GitHub</h3>
+        <p>Source code, releases with the <code>.whl</code> and <code>.vsix</code> files attached, issues and discussions.</p>
+        <span class="more">gokhanozdemir-git/SealBox →</span>
+      </a>
+    </div>
+    <div class="codeblock reveal" style="max-width:820px;margin:40px auto 0">
+<pre><span class="p">$ </span>pipx install sealbox                            <span class="c"># the engine</span>
+<span class="p">$ </span>code --install-extension gokhanozdemir.sealbox  <span class="c"># VS Code</span>
+<span class="c"># Cursor / Windsurf / VSCodium: Extensions → search "SealBox" (served from Open VSX)</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROBLEM ============ -->
+<section class="block" id="sorun">
+  <div class="wrap">
+    <div class="center reveal">
+      <p class="kicker">The problem</p>
+      <h2 class="title">AI agents read your files.<br>Your passwords too.</h2>
+      <p class="sub">
+        When you ask an agent to "fix this bug", it opens files in your project and sends their contents to a model.
+        A password in <code>.env</code> or hard-coded in the source has left your machine at that moment.
+        <code>.gitignore</code> doesn't stop it, because the agent reads the file straight from disk.
+      </p>
+    </div>
+
+    <div class="ba">
+      <div class="code-card reveal">
+        <header>src/config.py <span class="tag bad">Before SealBox</span></header>
+<pre class="code"><span class="k">import</span> os
+
+DB_HOST     = <span class="s">"db.internal"</span>
+DB_PASSWORD = <span class="s leak">"Pr0d-Sup3r-S3cret!"</span>
+ADMIN_EMAIL = <span class="s leak">"jane.doe@company.com"</span>
+OWNER_TCKN  = <span class="s leak">"10000000146"</span>
+API_KEY     = <span class="s leak">"sk_live_51N…8x"</span>
+
+<span class="k">def</span> <span class="f">connect</span>():
+    <span class="c"># password: Pr0d-Sup3r-S3cret!</span>
+    <span class="k">return</span> <span class="s">f"postgres://admin:</span>{DB_PASSWORD}<span class="s">@…"</span></pre>
+        <p class="agent-note bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5v.5"/></svg><span>When an agent reads this file, 4 secrets and 1 piece of personal data go to the model.</span></p>
+      </div>
+
+      <div class="code-card reveal">
+        <header>src/config.py <span class="tag good">after sealbox seal</span></header>
+<pre class="code"><span class="k">import</span> os
+
+DB_HOST     = <span class="s">"db.internal"</span>
+DB_PASSWORD = <span class="sealed">os.environ[<span class="s">"DB_PASSWORD"</span>]</span>
+ADMIN_EMAIL = <span class="sealed"><span class="s">"__SECURE_EMAIL_8f2c…__"</span></span>
+OWNER_TCKN  = <span class="sealed"><span class="s">"__SECURE_TCKN_103d…__"</span></span>
+API_KEY     = <span class="sealed">os.environ[<span class="s">"API_KEY"</span>]</span>
+
+<span class="k">def</span> <span class="f">connect</span>():
+    <span class="c"># password: <span class="sealed">__SECURE_PASSWORD_2cea…__</span></span>
+    <span class="k">return</span> <span class="s">f"postgres://admin:</span>{DB_PASSWORD}<span class="s">@…"</span></pre>
+        <p class="agent-note good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><span>The code runs the same way, but there are no secrets on disk. The values sit encrypted in <code>.sealbox/project.vault</code>.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="block alt" id="nasil">
+  <div class="wrap">
+    <div class="steps-layout">
+      <div class="reveal">
+        <p class="kicker">How it works</p>
+        <h2 class="title">Scan. Seal. Run with approval.</h2>
+        <p class="sub" style="margin-bottom:28px">
+          SealBox isn't a proxy sitting in between. It removes secrets from your files <b>for good</b>.
+          No matter which agent, editor or language you use, there is nothing left on disk to read.
+        </p>
+        <ol class="steps">
+          <li>
+            <span class="num">01</span>
+            <div>
+              <h3>Scan</h3>
+              <p>Rules and validators find passwords, tokens, API keys, emails, Turkish national IDs (TCKN), IBANs and phone numbers. <code>sealbox seal --check</code> reports without touching anything.</p>
+            </div>
+          </li>
+          <li>
+            <span class="num">02</span>
+            <div>
+              <h3>Seal</h3>
+              <p>Secrets move into the AES-256-GCM vault. The code keeps <code>os.environ["X"]</code> / <code>process.env.X</code> / <code>System.getenv("X")</code>, and personal data turns into a <code>__SECURE_..__</code> placeholder.</p>
+            </div>
+          </li>
+          <li>
+            <span class="num">03</span>
+            <div>
+              <h3>Run with approval</h3>
+              <p><code>sealbox exec -- python app.py</code> opens an approval window first. Secrets go only to that run, as environment variables, and any secret in the output is printed as <code>[REDACTED:..]</code>.</p>
+            </div>
+          </li>
+          <li>
+            <span class="num">04</span>
+            <div>
+              <h3>Share</h3>
+              <p>The vault is encrypted, so it can live in the repo. It reaches your team with <code>git push</code>, and only the GitHub accounts on the team can open it.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+      <div class="reveal">
+        <div class="flow-img"><img src="assets/flow.jpeg" alt="An email, an API key and a phone number in a JSON file are locked and moved into a vault, which is then sent to GitHub with git push" loading="lazy"></div>
+        <div class="codeblock" style="margin-top:22px">
+<pre><span class="p">$ </span>sealbox seal --check
+<span class="c">.env → .env.sealed: 1 value(s) will move to the vault (DB_PASSWORD)</span>
+<span class="c">3 file(s) scanned (0.0 s).</span>
+<span style="color:var(--yellow)">There are unredacted secrets on disk. Run 'sealbox seal'.</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="block" id="ozellikler">
+  <div class="wrap">
+    <div class="center reveal">
+      <p class="kicker">Features</p>
+      <h2 class="title">Finds secrets. Stores them. Watches for new ones.</h2>
+      <p class="sub">One command-line tool and its editor extension. No cloud account, no server, no subscription.</p>
+    </div>
+    <div class="grid g4">
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+        <h3>Automatic scanning</h3>
+        <p>Regex rules plus Luhn, IBAN mod-97, the TCKN checksum and entropy checks keep false alarms down.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="3.5"/><path d="M12 8.5V7M15.5 12H17"/></svg></div>
+        <h3>Encrypted vault</h3>
+        <p><code>.sealbox/project.vault</code>, AES-256-GCM. The key isn't on disk; it lives in your OS credential store.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14h6"/></svg></div>
+        <h3><code>.env</code> support</h3>
+        <p>Secret lines move into the vault and <code>.env</code> is deleted. A <code>.env.sealed</code> with only placeholders stays in its place.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <h3>Approval on every run</h3>
+        <p>There's deliberately no flag to skip it. Your program reaches the secrets only after you click "Allow".</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h7"/><path d="m17 15 4 4m0-4-4 4"/></svg></div>
+        <h3>Output filter</h3>
+        <p>If a known secret shows up in your program's output or logs, it's printed as <code>[REDACTED:..]</code>.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M13.5 6l-3 12"/></svg></div>
+        <h3>Python · JS/TS · Java</h3>
+        <p>Code is rewritten to the language's own environment-variable lookup. JSON/YAML/TOML configs are redacted and reported.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 2.9.8.1-.7.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg></div>
+        <h3>Teams via GitHub</h3>
+        <p>A copy locked to your teammate's SSH key on GitHub is created. No extra password to share.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 8.7-8.7M17 6l2.5 2.5M14.5 8.5 16 10"/></svg></div>
+        <h3>Recovery code</h3>
+        <p>Reopens the vault if your machine is wiped. Optionally split into 3 shares, any 2 of which are enough.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TEAM ============ -->
+<section class="block alt" id="ekip">
+  <div class="wrap split">
+    <div class="reveal">
+      <p class="kicker">Team sharing</p>
+      <h2 class="title">Don't paste passwords in Slack.<br>Push the vault.</h2>
+      <p class="sub" style="margin-bottom:0">
+        The vault sits encrypted in the repo. When you run <code>sealbox team add teammate</code>, SealBox
+        fetches your teammate's public SSH key from <code>github.com/teammate.keys</code> and writes a copy of
+        the vault key, locked just for them, into <code>team.json</code>.
+        After <code>git pull</code>, the vault opens with their own SSH key.
+      </p>
+      <ul class="checks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span><b>Owner / member roles.</b> Owners can add and remove people: <code>--owner</code>, <code>team promote</code>.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span><b>Removing someone rotates the key.</b> After <code>team remove</code> the old member can't open the new vault, and the values they may have seen are listed.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span><b>No fake members.</b> Every entry is signed with a MAC derived from the vault key.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span><b>SSH keys without a passphrase are rejected</b>, because an agent could read those too.</span></li>
+      </ul>
+    </div>
+    <div class="diagram reveal" aria-label="Team sharing flow">
+      <svg class="full" viewBox="0 0 480 400" fill="none" font-family="JetBrains Mono, monospace" font-size="12">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#5cc07a"/></marker>
+        </defs>
+        <rect x="16" y="20" width="160" height="70" rx="12" fill="#1a221e" stroke="#2f3d36"/>
+        <text x="96" y="50" fill="#e6ece8" text-anchor="middle" font-weight="700" font-size="14">You (owner)</text>
+        <text x="96" y="70" fill="#95a39b" text-anchor="middle">team add teammate</text>
+        <rect x="304" y="20" width="160" height="70" rx="12" fill="#1a221e" stroke="#2f3d36"/>
+        <text x="384" y="50" fill="#e6ece8" text-anchor="middle" font-weight="700" font-size="14">GitHub</text>
+        <text x="384" y="70" fill="#95a39b" text-anchor="middle">teammate.keys</text>
+        <path d="M296 55H184" stroke="#5cc07a" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#ar)"/>
+        <text x="240" y="46" fill="#5cc07a" text-anchor="middle" font-size="11">public SSH key</text>
+        <rect x="90" y="150" width="300" height="110" rx="14" fill="rgba(92,192,122,0.07)" stroke="#5cc07a"/>
+        <text x="240" y="176" fill="#5cc07a" text-anchor="middle" font-weight="700">.sealbox/ (in the repo)</text>
+        <rect x="110" y="190" width="125" height="52" rx="8" fill="#141a17" stroke="#2f3d36"/>
+        <text x="172" y="212" fill="#e6ece8" text-anchor="middle">project.vault</text>
+        <text x="172" y="230" fill="#95a39b" text-anchor="middle" font-size="11">AES-256-GCM</text>
+        <rect x="245" y="190" width="125" height="52" rx="8" fill="#141a17" stroke="#2f3d36"/>
+        <text x="307" y="212" fill="#e6ece8" text-anchor="middle">team.json</text>
+        <text x="307" y="230" fill="#95a39b" text-anchor="middle" font-size="11">one lock per person</text>
+        <path d="M96 98v44" stroke="#5cc07a" stroke-width="2" marker-end="url(#ar)"/>
+        <text x="104" y="126" fill="#95a39b" font-size="11">git push</text>
+        <rect x="160" y="310" width="160" height="70" rx="12" fill="#1a221e" stroke="#2f3d36"/>
+        <text x="240" y="340" fill="#e6ece8" text-anchor="middle" font-weight="700" font-size="14">Your teammate</text>
+        <text x="240" y="360" fill="#95a39b" text-anchor="middle">git pull → opens via SSH</text>
+        <path d="M240 268v34" stroke="#5cc07a" stroke-width="2" marker-end="url(#ar)"/>
+      </svg>
+      <p class="cap">Values never cross the network in plain text; only encrypted files go into the repo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SAFE ON GITHUB ============ -->
+<section class="block" id="github">
+  <div class="wrap">
+    <div class="center reveal">
+      <p class="kicker">Safe on GitHub</p>
+      <h2 class="title">Push the vault. Never the secrets.</h2>
+      <p class="sub">Your secrets travel through GitHub only as encrypted files. Each teammate's copy of the key is locked with their own GitHub SSH key, so even a leaked repo is still a locked box.</p>
+    </div>
+    <div class="split" style="align-items:start">
+      <div class="reveal">
+        <ol class="steps">
+          <li>
+            <span class="num">01</span>
+            <div>
+              <h3>Create an SSH key</h3>
+              <p>One <code>ed25519</code> key per person, with a passphrase. SealBox refuses keys without one, because any program on the machine, agents included, could read them.</p>
+            </div>
+          </li>
+          <li>
+            <span class="num">02</span>
+            <div>
+              <h3>Add it to GitHub</h3>
+              <p>Paste the public half (<code>id_ed25519.pub</code>) under GitHub → Settings → SSH keys. It's public by design: anyone can see it at <code>github.com/you.keys</code>.</p>
+            </div>
+          </li>
+          <li>
+            <span class="num">03</span>
+            <div>
+              <h3>Lock a copy for each teammate</h3>
+              <p><code>team add</code> fetches that public key and locks a copy of the vault key with it into <code>team.json</code>. Only the matching private key opens it, and that never leaves their computer.</p>
+            </div>
+          </li>
+          <li>
+            <span class="num">04</span>
+            <div>
+              <h3>Push and pull</h3>
+              <p><code>git push</code> sends only encrypted files. After <code>git pull</code>, the first run asks for the teammate's SSH passphrase once; then the key is cached in their OS credential store.</p>
+            </div>
+          </li>
+        </ol>
+        <div class="codeblock" style="margin-top:22px">
+<pre><span class="p">$ </span>ssh-keygen -t ed25519                <span class="c"># set a passphrase</span>
+<span class="p">$ </span>gh ssh-key add ~/.ssh/id_ed25519.pub <span class="c"># or: GitHub settings</span>
+<span class="p">$ </span>sealbox team init --github my-name
+<span class="p">$ </span>sealbox team add teammate
+<span class="p">$ </span>git add .sealbox &amp;&amp; git commit -m "vault" &amp;&amp; git push</pre>
+        </div>
+      </div>
+      <div class="diagram reveal">
+        <div class="locks">
+        <div class="lock-row">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span>
+          <span><b>project.vault</b><small>The encrypted vault, AES-256-GCM</small></span>
+          <span class="pill">goes to GitHub</span>
+        </div>
+        <div class="lock-row">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg></span>
+          <span><b>team.json</b><small>One lock per person, protected by a MAC</small></span>
+          <span class="pill">goes to GitHub</span>
+        </div>
+        <div class="lock-row">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14h6"/></svg></span>
+          <span><b>.env.sealed</b><small>Variable names with placeholders, no values</small></span>
+          <span class="pill">goes to GitHub</span>
+        </div>
+        <div class="lock-arrow">↓ never leaves your computer ↓</div>
+        <div class="lock-row">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 8.7-8.7M17 6l2.5 2.5"/></svg></span>
+          <span><b>~/.ssh/id_ed25519</b><small>Your private SSH key, passphrase-protected</small></span>
+          <span class="pill" style="color:var(--yellow);border-color:rgba(230,195,92,0.4)">stays on your PC</span>
+        </div>
+        <div class="lock-row">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
+          <span><b>Vault key (DEK)</b><small>In the OS credential store, never on disk</small></span>
+          <span class="pill" style="color:var(--yellow);border-color:rgba(230,195,92,0.4)">stays on your PC</span>
+        </div>
+        <div class="lock-row">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>
+          <span><b>Recovery code</b><small>Shown only in a window, kept outside the project</small></span>
+          <span class="pill" style="color:var(--yellow);border-color:rgba(230,195,92,0.4)">stays on your PC</span>
+        </div>
+        </div>
+        <p class="cap">Someone with push access but no key can't read a value, or add a fake member to team.json.</p>
+      </div>
+    </div>
+    <div class="grid g3" style="margin-top:56px">
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Git history check</h3>
+        <p>Cleaning a file doesn't clean old commits. <code>sealbox history</code> searches every commit for vault values and their encodings, and reports the name, commit and file, never the value. Pushed ones are marked: rotate those.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+        <h3>Pre-commit hook</h3>
+        <p><code>sealbox hook install</code> stops a commit that contains a vault value and points to <code>file:line</code>. Everyone installs it on their own machine; it isn't committed.</p>
+      </div>
+      <div class="card reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></div>
+        <h3>Releases built on GitHub</h3>
+        <p>Every version is tested by GitHub Actions, then published to PyPI with trusted publishing, so no API token is stored in GitHub. The extension goes to the Marketplace and Open VSX only after PyPI succeeds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RECOVERY ============ -->
+<section class="block alt" id="kurtarma">
+  <div class="wrap split rev">
+    <div class="reveal">
+      <p class="kicker">Recovery</p>
+      <h2 class="title">Lose the key, keep the vault.</h2>
+      <p class="sub" style="margin-bottom:0">
+        Windows got reset, you bought a new laptop, or your profile broke. If the vault key lived in only one place,
+        the vault would stay locked forever. In SealBox the vault key has several locks.
+        If one is gone, you open it with another.
+      </p>
+      <ul class="checks">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span><code>recovery setup</code>: a 128-bit recovery code. Shown only in a window, never printed to the terminal.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span><code>recovery shares</code>: splits the code into 3 shares (Shamir). Any 2 are enough.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span><code>recovery export</code>: a recovery kit for a USB stick or the cloud. Useless without the code.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg><span><code>recovery restore</code>: brings the key back with the code, 2 shares, or the kit.</span></li>
+      </ul>
+    </div>
+    <div class="diagram reveal">
+      <div class="locks">
+        <div class="lock-row">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
+          <span><b>Windows Credential Manager</b><small>Daily use, fast cache</small></span>
+          <span class="pill">tried first</span>
+        </div>
+        <div class="lock-row">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 8.7-8.7M17 6l2.5 2.5"/></svg></span>
+          <span><b>GitHub SSH key</b><small>ed25519→X25519 or RSA-OAEP</small></span>
+          <span class="pill">with a team</span>
+        </div>
+        <div class="lock-row">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>
+          <span><b>Recovery code</b><small>Argon2id (64 MiB) → X25519</small></span>
+          <span class="pill">last resort</span>
+        </div>
+        <div class="lock-arrow">↓ any one of them opens ↓</div>
+        <div class="dek"><span>DEK<br><small style="color:var(--muted)">vault key</small></span><span class="arrow">──►</span><span>project.vault</span></div>
+      </div>
+      <p class="cap">Envelope encryption: a single vault key (DEK), stored under several locks.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VS CODE ============ -->
+<section class="block" id="vscode">
+  <div class="wrap">
+    <div class="center reveal">
+      <p class="kicker">VS Code extension</p>
+      <h2 class="title">See a secret the moment you type it.</h2>
+      <p class="sub">The extension is the <code>sealbox</code> command's remote control in your editor. It underlines exposed secrets in yellow, moves them to the vault with a lightbulb, and reveals values on hover after you approve.</p>
+    </div>
+
+    <div class="split" style="align-items:start">
+      <div class="vsc reveal" aria-label="The SealBox extension inside VS Code">
+        <div class="vsc-title"><i></i><i></i><i></i><span>demo_project — Visual Studio Code</span></div>
+        <div class="vsc-tabs"><div class="on">config.py</div><div>app.py</div><div>.env.sealed</div></div>
+        <div class="vsc-code">
+          <div class="ln"><span>1</span><span><span class="k">import</span> os</span></div>
+          <div class="ln"><span>2</span><span> </span></div>
+          <div class="ln"><span>3</span><span>DB_HOST = <span class="s">"db.internal"</span></span></div>
+          <div class="ln"><span>4</span><span>DB_PASSWORD = os.environ[<span class="s">"DB_PASSWORD"</span>]</span></div>
+          <div class="ln"><span>5</span><span>API_TOKEN = <span class="s sq">"ghp_x7Kq…Wm2"</span>  <span class="bulb">💡</span></span></div>
+          <div class="ln"><span>6</span><span>OWNER = <span class="s">"__SECURE_TCKN_103d…__"</span></span></div>
+          <div class="ln"><span>7</span><span> </span></div>
+          <div class="ln"><span>8</span><span><span class="k">def</span> <span class="f">connect</span>():</span></div>
+          <div class="ln"><span>9</span><span>    <span class="k">return</span> db.open(DB_PASSWORD)</span></div>
+          <div class="ln"><span>10</span><span> </span></div>
+          <div class="ln"><span>11</span><span> </span></div>
+          <div class="ln"><span>12</span><span> </span></div>
+          <div class="hover-box">
+            <b>__SECURE_TCKN_…__</b> · redacted value in the vault<br>
+            The value isn't in this file; it's in the encrypted vault.<br>
+            <a>Show value (asks for approval)</a> · <a>Give at runtime</a>
+          </div>
+          <div class="vsc-menu">
+            <div class="on">Move this file's secrets into the vault</div>
+            <div>Scan project (any exposed secrets?)</div>
+            <div>Run program with the vault</div>
+          </div>
+        </div>
+        <div class="vsc-status"><span>🔒 3 secrets in vault</span><span>👥 2 people</span><span class="r">Python 3.13 · UTF-8</span></div>
+      </div>
+
+      <div class="reveal">
+        <div class="grid g2" style="gap:14px">
+          <div class="card"><h3>Exposed-secret warnings</h3><p>Files are scanned on open and save, and secrets get a yellow squiggle.</p></div>
+          <div class="card"><h3>Quick fix</h3><p>Lightbulb → "Move this file's secrets into the vault".</p></div>
+          <div class="card"><h3>Hover to see</h3><p>An approved "Show value" on any <code>__SECURE_..__</code> or <code>os.environ["X"]</code>.</p></div>
+          <div class="card"><h3>Status bar</h3><p>Shows how many secrets are in the vault and how many people share it, and warns when there's no recovery backup.</p></div>
+          <div class="card"><h3>Run with the vault</h3><p>Starts your program in the terminal with <code>sealbox exec</code>. Suggests it when a plain run fails with <code>KeyError</code>.</p></div>
+          <div class="card"><h3>Team and recovery</h3><p>Set up a team, add a <code>@user</code>, create a recovery code, or reopen with a kit, all from the menu.</p></div>
+        </div>
+        <div class="hero-cta">
+          <a class="btn primary" href="https://marketplace.visualstudio.com/items?itemName=gokhanozdemir.sealbox" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 2.2 8.3 10.7 3.6 7.1 2 7.9v8.2l1.6.8 4.7-3.6 9.3 8.5L22 20V4zM4 14.3V9.7l2.6 2.3zm13.6 1.9-5.5-4.2 5.5-4.2z"/></svg>
+            Install from Marketplace
+          </a>
+          <a class="btn" href="https://open-vsx.org/extension/gokhanozdemir/sealbox" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/></svg>Get it on Open VSX</a>
+          <a class="btn" href="learn.html#vscode">Usage guide</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY ============ -->
+<section class="block alt" id="neden">
+  <div class="wrap">
+    <div class="center reveal">
+      <p class="kicker">Why SealBox?</p>
+      <h2 class="title">Our habits weren't built for the agent era.</h2>
+      <p class="sub">Keeping secrets in <code>.env</code> and adding it to <code>.gitignore</code> protects you from git. But today there's also an AI agent reading your files.</p>
+    </div>
+    <div class="table-wrap reveal">
+      <table>
+        <thead>
+          <tr><th></th><th>Hard-coded secret</th><th><code>.env</code> + <code>.gitignore</code></th><th class="hl">SealBox</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Does the agent see the secret when it reads the file?</td><td><span class="x">Yes</span></td><td><span class="x">Yes</span>, the file is plain on disk</td><td class="hl"><span class="y">No</span>, no secrets on disk</td></tr>
+          <tr><td>Finds secrets by itself?</td><td><span class="x">No</span></td><td><span class="x">No</span></td><td class="hl"><span class="y">Yes</span>, in code, config files and <code>.env</code></td></tr>
+          <tr><td>Warns about a forgotten exposed secret?</td><td><span class="x">No</span></td><td><span class="x">No</span></td><td class="hl"><span class="y">Yes</span>, <code>seal --check</code>, CI and editor warnings</td></tr>
+          <tr><td>Sharing with the team</td><td>Plain in the repo</td><td><span class="m">By hand</span>, over chat or email</td><td class="hl"><span class="y">git push</span>, with GitHub SSH keys</td></tr>
+          <tr><td>If the key is lost</td><td>—</td><td>If the file's gone, it's gone</td><td class="hl"><span class="y">Recovery code</span>, 2-of-3 shares, kit</td></tr>
+          <tr><td>If a secret leaks into program output</td><td><span class="x">Visible</span></td><td><span class="x">Visible</span></td><td class="hl">Printed as <span class="y">[REDACTED:..]</span></td></tr>
+          <tr><td>Personal data (national ID, email, IBAN)</td><td><span class="x">Plain</span></td><td><span class="x">Plain</span></td><td class="hl"><span class="y">Redacted</span>, handed over at runtime if needed</td></tr>
+        <tr><td>A secret committed before</td><td><span class="x">Stays in history</span></td><td><span class="x">Stays in history</span></td><td class="hl"><span class="y">sealbox history</span> finds it; the commit hook stops the next one</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="center" style="color:var(--dim);font-size:14px;margin-top:18px">
+      Honest limits: regex can't catch every secret, and a deliberately malicious local program could try to read the credential store.
+      Details in the <a href="docs.html#sinirlar">docs</a>.
+    </p>
+  </div>
+</section>
+
+<!-- ============ LEARN / DOCS ============ -->
+<section class="block" id="kaynaklar">
+  <div class="wrap">
+    <div class="center reveal">
+      <p class="kicker">Resources</p>
+      <h2 class="title">Learn first, then go deep.</h2>
+      <p class="sub">Step-by-step guides for newcomers. The docs list every option of every command.</p>
+    </div>
+    <div class="grid g3">
+      <a class="card reveal" href="learn.html#baslangic">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-14 9z"/></svg></div>
+        <h3>Start in 5 minutes</h3>
+        <p>Install, seal your first project, run your program with the vault.</p>
+        <span class="more">Learn →</span>
+      </a>
+      <a class="card reveal" href="learn.html#kavramlar">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg></div>
+        <h3>Core concepts</h3>
+        <p>Vault, DEK, placeholder, approval window. Explained with analogies, light on jargon.</p>
+        <span class="more">Read →</span>
+      </a>
+      <a class="card reveal" href="docs.html">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 17 6-6-6-6M12 19h8"/></svg></div>
+        <h3>Command reference</h3>
+        <p><code>init</code>, <code>seal</code>, <code>exec</code>, <code>vault</code>, <code>team</code>, <code>recovery</code> and configuration.</p>
+        <span class="more">Docs →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GETTING STARTED ============ -->
+<section class="block alt" id="basla">
+  <div class="wrap">
+    <div class="reveal">
+      <p class="kicker">Getting started</p>
+      <h2 class="title">Up and running in four commands.</h2>
+      <p class="sub">Run these in your project folder. Every step tells you the next one, and <code>sealbox status</code> is there whenever you get stuck.</p>
+    </div>
+    <div class="rows">
+      <div class="row-item reveal">
+        <div>
+          <span class="num">01</span>
+          <h3>Install and check</h3>
+          <p>Install the tool, then let <code>init</code> look at your project. It changes no files and lists what to do next.</p>
+          <a class="more" href="learn.html#baslangic">Start in 5 minutes →</a>
+        </div>
+        <div class="codeblock">
+<pre><span class="p">$ </span>pip install sealbox
+<span class="p">$ </span>cd my-project
+<span class="p">$ </span>sealbox init</pre>
+        </div>
+      </div>
+      <div class="row-item reveal">
+        <div>
+          <span class="num">02</span>
+          <h3>Seal your secrets</h3>
+          <p>Passwords and keys move into the encrypted vault; your code reads them from environment variables instead.</p>
+          <a class="more" href="learn.html#ilk-proje">Seal your first project →</a>
+        </div>
+        <div class="codeblock">
+<pre><span class="p">$ </span>sealbox seal --check   <span class="c"># look first</span>
+<span class="p">$ </span>sealbox seal</pre>
+        </div>
+      </div>
+      <div class="row-item reveal">
+        <div>
+          <span class="num">03</span>
+          <h3>Create a recovery code</h3>
+          <p>A spare key for the day Windows gets reset. Shown once, in a window; never in the terminal.</p>
+          <a class="more" href="learn.html#kurtarma">If you lose the key →</a>
+        </div>
+        <div class="codeblock">
+<pre><span class="p">$ </span>sealbox recovery setup
+<span class="p">$ </span>sealbox recovery shares   <span class="c"># optional</span></pre>
+        </div>
+      </div>
+      <div class="row-item reveal">
+        <div>
+          <span class="num">04</span>
+          <h3>Run with approval</h3>
+          <p>Your program gets the secrets only for this run, after you click Allow. Commit the vault and push it to your team.</p>
+          <a class="more" href="learn.html#calistir">Run with the vault →</a>
+        </div>
+        <div class="codeblock">
+<pre><span class="p">$ </span>sealbox exec -- python app.py
+<span class="p">$ </span>git add .sealbox &amp;&amp; git commit -m "vault"</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-center dot-grid">
+  <div class="wrap reveal">
+    <h2>Seal your first project today.</h2>
+    <p>All you need is Python 3.12+. Windows, macOS and Linux, in English or Turkish.</p>
+    <div class="hero-cta cta-buttons">
+      <a class="btn primary" href="learn.html#baslangic">Start in 5 minutes</a>
+      <a class="btn" href="docs.html">Read the docs</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    <div>
+      <a class="brand" href="index.html" style="margin-bottom:12px">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#06110a" stroke-width="2.6" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2" fill="#06110a"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        SealBox
+      </a>
+      <p style="margin:0;max-width:320px">An open-source security tool that pulls secrets out of your files and seals them in an encrypted vault.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#nasil">How it works</a></li>
+        <li><a href="#ozellikler">Features</a></li>
+        <li><a href="#vscode">VS Code extension</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Learn</h4>
+      <ul>
+        <li><a href="learn.html">Guides</a></li>
+        <li><a href="docs.html">Docs</a></li>
+        <li><a href="docs.html#yapilandirma">Configuration</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Links</h4>
+      <ul>
+        <li><a href="https://github.com/gokhanozdemir-git/SealBox" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://pypi.org/project/sealbox/" target="_blank" rel="noopener">PyPI</a></li>
+        <li><a href="https://marketplace.visualstudio.com/items?itemName=gokhanozdemir.sealbox" target="_blank" rel="noopener">VS Code Marketplace</a></li><li><a href="https://open-vsx.org/extension/gokhanozdemir/sealbox" target="_blank" rel="noopener">Open VSX</a></li>
+        <li><a class="lang" href="tr/index.html" hreflang="tr" lang="tr">Türkçe</a></li>
+      </ul>
+    </div>
+    <div class="bottom"><span>FSL-1.1-ALv2 license · SealBox 0.3.0</span><span>Never put real secrets in example files.</span></div>
+  </div>
+</footer>
+
+<script src="assets/main.js"></script>
+</body>
+</html>
