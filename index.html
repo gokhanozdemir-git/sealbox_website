@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SealBox — Give your secrets to a vault, not to your agents</title>
+  <title>SealBox — Let your agent read the code, not your secrets</title>
   <meta name="description" content="SealBox finds passwords, API keys and personal data in your code files and moves them into an encrypted vault. AI coding agents can read your files and still see no secrets.">
-  <meta property="og:title" content="SealBox — Give your secrets to a vault, not to your agents">
+  <meta property="og:title" content="SealBox — Let your agent read the code, not your secrets">
   <meta property="og:description" content="A security tool and VS Code extension that pulls secrets out of your files and seals them in an AES-256-GCM vault.">
   <meta property="og:image" content="assets/flow.jpeg">
   <meta name="theme-color" content="#0a0c0b">
@@ -47,7 +47,7 @@
   <div class="wrap">
     <div class="hero-content">
       <span class="eyebrow"><span class="dot"></span>v0.3.0 · Python · JS/TS · Java</span>
-      <h1>Give your secrets to a <span class="g">vault</span>, not to your agents.</h1>
+      <h1>Let your agent read the code, <span class="g">not your secrets</span>.</h1>
       <p class="lead">
         SealBox finds the passwords, API keys and personal data in your project,
         pulls them out of your files and locks them in an encrypted vault. Claude Code, Copilot or Cursor
@@ -92,7 +92,6 @@
   <div class="wrap">
     <div class="stat reveal"><b>3</b><span>languages: Python · JS/TS · Java</span></div>
     <div class="stat reveal"><b>256</b><span>bit AES-GCM vault</span></div>
-    <div class="stat reveal"><b>2 of 3</b><span>recovery shares open the vault</span></div>
     <div class="stat reveal"><b>0</b><span>plain-text secrets left on disk</span></div>
   </div>
 </section>
@@ -301,7 +300,7 @@ API_KEY     = <span class="sealed">os.environ[<span class="s">"API_KEY"</span>]<
   <div class="wrap split">
     <div class="reveal">
       <p class="kicker">Team sharing</p>
-      <h2 class="title">Don't paste passwords in Slack.<br>Push the vault.</h2>
+      <h2 class="title">Share secrets through the vault,<br>not through messages.</h2>
       <p class="sub" style="margin-bottom:0">
         The vault sits encrypted in the repo. When you run <code>sealbox team add teammate</code>, SealBox
         fetches your teammate's public SSH key from <code>github.com/teammate.keys</code> and writes a copy of
