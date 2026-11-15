@@ -127,7 +127,7 @@
     const script = [
       { cmd: "pip install sealbox" },
       { out: '<span class="o">Collecting sealbox</span>', wait: 450 },
-      { out: '<span class="ok">Successfully installed sealbox-0.3.0</span>', wait: 600 },
+      { out: '<span class="ok">Successfully installed sealbox-0.3.1</span>', wait: 600 },
       { cmd: "sealbox seal" },
       { out: sealOut[0], wait: 450 },
       { out: sealOut[1], wait: 300 },
